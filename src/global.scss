@@ -1,0 +1,134 @@
+// http://ionicframework.com/docs/theming/
+@import '~@ionic/angular/css/core.css';
+@import '~@ionic/angular/css/normalize.css';
+@import '~@ionic/angular/css/structure.css';
+@import '~@ionic/angular/css/typography.css';
+
+@import '~@ionic/angular/css/padding.css';
+@import '~@ionic/angular/css/float-elements.css';
+@import '~@ionic/angular/css/text-alignment.css';
+@import '~@ionic/angular/css/text-transformation.css';
+@import '~@ionic/angular/css/flex-utils.css';
+
+
+@font-face {
+    font-family: 'bhaji';
+    src: url('assets/fonts/bahij_sultannahia/Bahij_SultanNahia-Regular.ttf')format('truetype');
+    font-weight: normal;
+}
+
+$ff-bhaji : 'bhaji';
+
+.text-right {
+    text-align: right;
+}
+
+$textRed : #d33939;
+
+
+.text-red {
+    color: $textRed !important;
+}
+
+@mixin posttitle {
+    font-family: $ff-bhaji !important;
+    margin: 4px 0 0 0;
+    font-size: 1.25rem;
+    text-transform: uppercase;
+    line-height: 21px;
+    color: #212121;
+}
+
+@mixin meta-data($font-size, $color) {
+    font-size: $font-size;
+    color: $color;
+}
+
+.custom-icon {
+    width: 20px;
+}
+
+.menu-header {
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+    align-items: center;
+    padding: 0px 10px;
+
+    .custom-icon {
+        cursor: pointer;
+    }
+
+    img.logo {
+        width: 110px;
+    }
+
+
+
+}
+
+ion-label.maneu-label>span {
+    display: inline-block;
+    vertical-align: middle;
+    padding: 0 12px 0 0;
+}
+
+.post-archive-wrap {
+    article.post-archive-single {
+        box-shadow: 2px 2px 4px -1px #dedede;
+        margin: 6px;
+
+
+        .post-thumbnail {
+            width: 100%;
+            background-position: center;
+            background-size: cover;
+            padding-top: 30.43%;
+        }
+
+        &.Videos {
+            .post-thumbnail {
+                padding-top: 46.80%;
+            }
+        }
+
+        .post-title {
+            @include posttitle();
+        }
+
+        .post-meta {
+            .post-cat {
+                @include meta-data(0.75rem, #c3000b);
+            }
+
+            .post-date {
+                @include meta-data(0.75rem, #262626);
+            }
+        }
+
+    }
+
+
+
+
+}
+
+.single-post {
+    .post-title {
+        @include posttitle();
+    }
+
+    .post-content {
+        @include meta-data(1rem, #212121);
+    }
+
+    .post-meta {
+        .post-author {
+            @include meta-data(0.75rem, #c3000b);
+        }
+
+        .post-date {
+            @include meta-data(0.75rem, #262626);
+        }
+    }
+}

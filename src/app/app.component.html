@@ -1,0 +1,33 @@
+<ion-app>
+  <ion-split-pane>
+    <ion-menu menuId="main-menu">
+      <ion-header>
+        <ion-toolbar>
+          <div class="menu-header">
+            <img class="custom-icon" (click)="closeMenu()" src="assets/icons/menu.png" alt="menu">
+            <img class="custom-icon logo" src="assets/logo/logo.png" alt="logo">
+            <img class="custom-icon" src="assets/icons/setting.png" alt="setting">
+          </div>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
+        <ion-list lines="none">
+          <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages">
+            <ion-item  [routerLink]="['/home/archive', p.id]">
+              <ion-label class="maneu-label">
+                <span>
+                  <img class="custom-icon" *ngIf="p.icon" src="assets/icons/{{p.icon}}" alt="icon" />
+                </span>
+                <span [ngClass]="{'text-red' : p.color}">
+                  {{p.title}}
+                </span>
+              </ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+        </ion-list>
+      </ion-content>
+    </ion-menu>
+    
+    <ion-router-outlet main></ion-router-outlet>
+  </ion-split-pane>
+</ion-app>

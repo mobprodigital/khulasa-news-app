@@ -1,0 +1,14 @@
+<article [ngClass]="['post-archive-single', post.category]"   *ngIf="post">
+  <div class="post-thumbnail" [style.background-image]="'url(' + post.thumbnail + ')'">
+
+  </div>
+  <div class="post-data">
+    <h3 class="post-title">{{post.title}}</h3>
+    <div class="post-meta text-right">
+      <span *ngIf="post.categoryList.length > 0">
+        <span class="post-cat" *ngFor="let pc of post.categoryList">{{pc.categoryName}}</span>
+        | <span class="post-date">{{post.date | date}}</span>
+      </span>
+    </div>
+  </div>
+</article>

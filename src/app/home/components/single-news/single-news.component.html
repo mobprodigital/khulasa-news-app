@@ -1,0 +1,35 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+          <ion-icon name="arrow-back"></ion-icon> &nbsp; Back
+      </ion-button>
+    </ion-buttons>
+    <!-- <ion-title>Back</ion-title> -->
+  </ion-toolbar>
+</ion-header>
+<ion-content padding>
+  <div class="single-post" *ngIf="post">
+    <header class="post-thumbnail">
+      <img [src]="post.thumbnail" alt="post thumbnail">
+    </header>
+    <h1 class="post-title">{{post.title}}</h1>
+    <div class="post-meta">
+      <ion-grid no-padding>
+        <ion-row no-padding>
+          <ion-col no-padding align-self-start>
+            <span class="post-author">
+              {{post.author}}
+            </span>
+          </ion-col>
+          <ion-col no-padding align-self-end class="text-right">
+            <span class="post-date">
+              {{post.date | date}}
+            </span>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
+    <div class="post-content" [innerHtml]="post.content"></div>
+  </div>
+</ion-content>

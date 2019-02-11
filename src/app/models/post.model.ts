@@ -8,6 +8,7 @@ export class PostModel {
     public slug: string;
     public title: string;
     public thumbnail: string;
+    public portalUrl: string;
     public category: string;
     public categoryList: PostCategoryModel[];
     constructor();

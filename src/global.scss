@@ -77,7 +77,17 @@ ion-label.maneu-label>span {
     article.post-archive-single {
         box-shadow: 2px 2px 4px -1px #dedede;
         margin: 6px;
+        position: relative;
 
+        .share-icon {
+            position: absolute;
+            top: 65px;
+            right: 10px;
+
+            img {
+                width: 30px;
+            }
+        }
 
         .post-thumbnail {
             width: 100%;
@@ -90,6 +100,17 @@ ion-label.maneu-label>span {
             .post-thumbnail {
                 padding-top: 46.80%;
             }
+
+            .share-icon {
+                position: static;
+                float: right;
+                margin-right: 5px;
+                margin-bottom: 5px;
+            }
+
+            .post-data {
+                overflow: auto;
+            }
         }
 
         .post-title {
@@ -98,6 +119,7 @@ ion-label.maneu-label>span {
 
         .post-meta {
             .post-cat {
+                margin-left: 5px;
                 @include meta-data(0.75rem, #c3000b);
             }
 

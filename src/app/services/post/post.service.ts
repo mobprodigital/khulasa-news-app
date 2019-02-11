@@ -80,6 +80,7 @@ export class PostService {
       category : p.category,
       content: p.content,
       title: p.title,
+      portalUrl : p.url,
       thumbnail: p.thumbnail,
       date: p.date,
       categoryList: (p.categoryList && p.categoryList.length > 0) ? this.parsePostCategories(p.categoryList) : []

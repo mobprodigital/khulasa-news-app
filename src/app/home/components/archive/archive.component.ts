@@ -17,7 +17,6 @@ export class ArchiveComponent implements OnInit {
   constructor(
     private activatedRoute: ActivatedRoute,
     private postService: PostService,
-    private navCtrl: NavController,
     private modelCtrl : ModalController
   ) {
     this.getCatId();

@@ -71,16 +71,27 @@ export class PostService {
     })
   }
 
+  public getRelatedPosts(postId: number): Promise<PostModel[]> {
+    return new Promise((resolve, reject) => {
+      this.http.get(new HttpParams()
+        .set('action', 'get_related_posts')
+        .set('post_id', postId.toString())
+      ).then(data => {
+        let posts = this.parsePosts(data);
+        resolve(posts);
+      }).catch(err => reject(err));
+    })
+  }
 
   private parsePosts = (posts: any[]): PostModel[] => posts && posts.length > 0
     ? posts.map(p => new PostModel({
       postId: p.id,
       author: p.author,
       slug: p.slug,
-      category : p.category,
+      category: p.category,
       content: p.content,
       title: p.title,
-      portalUrl : p.url,
+      portalUrl: p.url,
       thumbnail: p.thumbnail,
       date: p.date,
       categoryList: (p.categoryList && p.categoryList.length > 0) ? this.parsePostCategories(p.categoryList) : []

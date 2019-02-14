@@ -9,7 +9,7 @@
 
 
   <ion-segment *ngIf="menuCategories && menuCategories.length > 0" scrollable>
-    <ion-segment-button  [routerLink]="['/home/archive', menuItem.categoryId]" *ngFor="let menuItem of menuCategories">
+    <ion-segment-button [checked]="menuItem.categoryId == activeCategoryId" [routerLink]="['/home/archive', menuItem.categoryId]" *ngFor="let menuItem of menuCategories">
       {{menuItem.categoryName}}
     </ion-segment-button>
   </ion-segment>

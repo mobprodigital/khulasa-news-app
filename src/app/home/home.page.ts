@@ -10,7 +10,7 @@ import { MenuController } from '@ionic/angular';
 })
 export class HomePage implements OnDestroy, OnInit {
 
-  public activeCategoryId: number = null;
+  public activeCategoryId: number = 42;
 
   public menuCategories: PostCategoryModel[] = [];
   constructor(
@@ -35,7 +35,7 @@ export class HomePage implements OnDestroy, OnInit {
     }
   }
 
-  openMenu() {
+  public openMenu() {
     this.menuCtrl.open()
   }
 

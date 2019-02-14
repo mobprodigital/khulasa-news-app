@@ -1,18 +1,20 @@
 <article [ngClass]="['post-archive-single', post.category]" *ngIf="post">
   <div (click)="viewPost()" class="post-thumbnail" [style.background-image]="'url(' + post.thumbnail + ')'">
-
+    <span class="share-icon">
+      <img *ngIf="!isVideo" (click)="sharePost($event)" class="custom-icon" src="assets/icons/share.png" alt="share" />
+    </span>
   </div>
   <div class="post-data">
     <h3 class="post-title" (click)="viewPost()">{{post.title}}</h3>
-    <div *ngIf="post.category !== 'Videos'" class="post-meta text-right">
+    <div *ngIf="!isVideo" class="post-meta text-right">
       <span *ngIf="post.categoryList.length > 0">
         <span class="post-cat" *ngFor="let pc of post.categoryList">{{pc.categoryName}}</span>
         | <span class="post-date">{{post.date | date}}</span>
       </span>
     </div>
-    <span class="share-icon">
-      <img (click)="sharePost()" class="custom-icon" src="assets/icons/share.png" alt="share" />
+    <span  *ngIf="isVideo" class="share-icon">
+      <img (click)="sharePost($event)" class="custom-icon" src="assets/icons/share.png" alt="share" />
     </span>
-    
+
   </div>
 </article>

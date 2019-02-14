@@ -10,6 +10,9 @@ import { SingleNewsComponent } from 'src/app/home/components/single-news/single-
 })
 export class ArchivePostPage implements OnInit {
 
+
+  public isVideo: boolean = false;
+
   @Input() post: PostModel;
 
   constructor(
@@ -17,6 +20,7 @@ export class ArchivePostPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.isVideo = this.post.categoryList.some(cat => cat.categoryId === 47);
   }
 
   public async viewPost() {
@@ -32,14 +36,16 @@ export class ArchivePostPage implements OnInit {
   }
 
 
-  public sharePost(){
+  public sharePost(ev : MouseEvent) {
+    ev.stopPropagation();
+    ev.preventDefault();    
     if ('share' in navigator) {
       window.navigator['share']({
         title: this.post.title,
         text: this.post.content.substr(0, 100),
         url: this.post.portalUrl
       }).catch(err => {
-        
+
       });
     }
     else {

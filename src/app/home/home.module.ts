@@ -15,7 +15,7 @@ import { RoutedEventEmitterService } from '../services/routed-event-emitter/rout
     CommonModule,
     FormsModule,
     IonicModule,
-    
+
     RouterModule.forChild([
       {
         path: '',
@@ -35,7 +35,7 @@ import { RoutedEventEmitterService } from '../services/routed-event-emitter/rout
 
     ])
   ],
-  declarations: [HomePage, ArchivePostPage, ArchiveComponent, SingleNewsComponent, ],
-  providers : [RoutedEventEmitterService]
+  declarations: [HomePage, ArchivePostPage, ArchiveComponent, SingleNewsComponent],
+  providers: [RoutedEventEmitterService]
 })
 export class HomePageModule { }

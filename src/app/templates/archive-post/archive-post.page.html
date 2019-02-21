@@ -1,4 +1,4 @@
-<article [ngClass]="['post-archive-single', post.category]" *ngIf="post">
+<article class="post-archive-single" [ngClass]="{'Videos' : isVideo}" *ngIf="post">
   <div (click)="viewPost()" class="post-thumbnail" [style.background-image]="'url(' + post.thumbnail + ')'">
     <span class="share-icon">
       <img *ngIf="!isVideo" (click)="sharePost($event)" class="custom-icon" src="assets/icons/share.png" alt="share" />

@@ -143,6 +143,8 @@ ion-label.maneu-label>span {
 }
 
 .single-post {
+    text-align: left;
+
     .post-title {
         @include posttitle();
     }

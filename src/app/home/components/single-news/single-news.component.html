@@ -9,54 +9,61 @@
   </ion-toolbar>
 </ion-header>
 <ion-content padding>
-  <div *ngIf="isVideoPost && youTubeUrl; else notVideo">
-      <iframe 
-        style="width: 100%"
-        height="420" 
-        [src]="youTubeUrl" 
-        frameborder="0" 
-        allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" 
-        allowfullscreen></iframe>
-  </div>
-  <ng-template #notVideo>
-    <div class="single-post" *ngIf="post">
-      <header class="post-thumbnail">
-        <img [src]="post.thumbnail" alt="post thumbnail">
-      </header>
-      <h1 class="post-title">{{post.title}}</h1>
-      <div class="post-meta">
-        <ion-grid no-padding>
-          <ion-row no-padding>
-            <ion-col size="9" no-padding align-self-center>
-              <span class="post-author">
-                {{post.author}}
-              </span>
-              <span class="post-date">{{post.date | date}}</span>
-            </ion-col>
-            <ion-col size="3" no-padding align-self-center class="text-right icons-action">
-              <span class="comm-icon">
-                <img class="custom-icon" src="assets/icons/comment.png" alt="share" />
-              </span>
-              <span class="share-icon">
-                <img (click)="sharePost($event)" class="custom-icon" src="assets/icons/share.png" alt="share" />
-              </span>
-            </ion-col>
-          </ion-row>
-        </ion-grid>
-      </div>
-      <div class="post-content" [innerHtml]="post.content"></div>
-    </div>
-  </ng-template>
+  <div *ngIf="sliderPosts && sliderPosts.length > 0">
+    <ion-slides #postSlider (ionSlideNextEnd)="onSlideNext()" [options]="sliderOptions">
+      <ion-slide *ngFor="let postSlide of sliderPosts;let slideIndex = index" data-index="slideIndex">
+        <section *ngIf="postSlide" class="post-slide-wrap">
+          <div *ngIf="postSlide.isVideo && youTubeUrl; else notVideo">
+            <iframe style="width: 100%" height="420" [src]="youTubeUrl" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen></iframe>
+          </div>
+          <ng-template #notVideo>
+            <div class="single-post" *ngIf="postSlide.post">
+              <header class="post-thumbnail">
+                <img [src]="postSlide.post.thumbnail" alt="post thumbnail">
+              </header>
+              <h1 class="post-title">{{postSlide.post.title}}</h1>
+              <div class="post-meta">
+                <ion-grid no-padding>
+                  <ion-row no-padding>
+                    <ion-col size="9" no-padding align-self-center>
+                      <span class="post-author">
+                        {{postSlide.post.author}}
+                      </span>
+                      <span class="post-date">{{postSlide.post.date | date}}</span>
+                    </ion-col>
+                    <ion-col size="3" no-padding align-self-center class="text-right icons-action">
+                      <span class="comm-icon">
+                        <img class="custom-icon" src="assets/icons/comment.png" alt="comment" />
+                      </span>
+                      <span class="share-icon">
+                        <img (click)="sharePost($event, postSlide.post)" class="custom-icon" src="assets/icons/share.png"
+                          alt="share" />
+                      </span>
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
+              </div>
+              <div class="post-content" [innerHtml]="postSlide.post.content"></div>
+            </div>
+          </ng-template>
 
-  <section *ngIf="relatedPosts && relatedPosts.length > 0" class="related-posts-wrapper">
-    <aside class="related-post" *ngFor="let rp of relatedPosts">
-      <div class="r-p-thumbnail" [style.background-image]="'url(' + rp.thumbnail + ')'">
-      </div>
-      <div class="r-p-data">
-        <h3 class="r-p-title">
-          {{rp.title}}
-        </h3>
-      </div>
-    </aside>
-  </section>
+          <section *ngIf="postSlide.relatedPosts && postSlide.relatedPosts.length > 0" class="related-posts-wrapper">
+            <aside class="related-post" *ngFor="let rp of postSlide.relatedPosts">
+              <div class="r-p-thumbnail" [style.background-image]="'url(' + rp.thumbnail + ')'">
+              </div>
+              <div class="r-p-data">
+                <h3 class="r-p-title">
+                  {{rp.title}}
+                </h3>
+              </div>
+            </aside>
+          </section>
+        </section> <!-- post slide wrap -->
+      </ion-slide>
+    </ion-slides>
+  </div>
+
+
+
 </ion-content>

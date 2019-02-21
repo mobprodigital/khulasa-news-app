@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpParams } from "@angular/common/http";
+import { HttpParams } from '@angular/common/http';
 import { PostModel } from 'src/app/models/post.model';
 import { AjaxService } from '../ajax/ajax.service';
 import { PostCategoryModel } from 'src/app/models/post-category.model';
@@ -39,7 +39,7 @@ export class PostService {
       params = params.set('content_length', 'full');
 
       this.http.get(params).then((response: any) => {
-        let posts = this.parsePosts(response);
+        const posts = this.parsePosts(response);
         res(posts);
       }, err => rej(err));
     });
@@ -53,22 +53,22 @@ export class PostService {
           .set('postId', postId.toString())
       )
         .then(resp => {
-          let singlePost = this.parsePosts([resp]);
+          const singlePost = this.parsePosts([resp]);
           res(singlePost[0]);
         })
         .catch(err => {
           rej(err);
-        })
+        });
     });
   }
 
   public getMenuCategories(): Promise<PostCategoryModel[]> {
     return new Promise((res, rej) => {
       this.http.get(new HttpParams().set('action', 'get_menu')).then(menu => {
-        let _menu = this.parsePostCategories(menu);
+        const _menu = this.parsePostCategories(menu);
         res(_menu);
       }).catch(err => rej(err));
-    })
+    });
   }
 
   public getRelatedPosts(postId: number): Promise<PostModel[]> {
@@ -77,10 +77,10 @@ export class PostService {
         .set('action', 'get_related_posts')
         .set('post_id', postId.toString())
       ).then(data => {
-        let posts = this.parsePosts(data);
+        const posts = this.parsePosts(data);
         resolve(posts);
       }).catch(err => reject(err));
-    })
+    });
   }
 
   private parsePosts = (posts: any[]): PostModel[] => posts && posts.length > 0
@@ -96,7 +96,7 @@ export class PostService {
       date: p.date,
       categoryList: (p.categoryList && p.categoryList.length > 0) ? this.parsePostCategories(p.categoryList) : []
     })) :
-    [];
+    []
 
   private parsePostCategories = (cats: any[]): PostCategoryModel[] => cats && cats.length > 0
     ? cats.map(c => new PostCategoryModel({
@@ -105,6 +105,36 @@ export class PostService {
       postCount: c.postCount,
       slug: c.slug,
     })) :
-    [];
+    []
+
+  /**
+   * Get next post of current post
+   * @param postId current the post id
+   * @param postDirection (default is previous) Next of previous post
+   * @param contentLength (default is full )length of content
+   */
+  public getAdjecentPost(
+    postId: number,
+    postDirection: 'next' | 'previous' = 'previous',
+    contentLength: 'full' | 'short' = 'full'): Promise<PostModel> {
+    return new Promise((resolve, reject) => {
+      let params = new HttpParams().set('postId', postId.toString()).set('contentLength', contentLength);
+      if (postDirection === 'next') {
+        params = params.set('action', 'get_next_post');
+      } else if (postDirection === 'previous') {
+        params = params.set('action', 'get_prev_post');
+      } else {
+        throw new Error('postDirection value mismatch');
+      }
+      this.http.get(
+        params
+      ).then(data => {
+        const nextPost = this.parsePosts([data]);
+        resolve(nextPost[0]);
+      }).catch(err => {
+        reject(err);
+      });
+    });
+  }
 
 }

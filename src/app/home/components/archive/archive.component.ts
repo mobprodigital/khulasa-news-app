@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { PostService } from 'src/app/services/post/post.service';
 import { PostModel } from 'src/app/models/post.model';
-import { NavController, ModalController } from '@ionic/angular';
+import { ModalController } from '@ionic/angular';
 import { SingleNewsComponent } from '../single-news/single-news.component';
-import { Subscription } from 'rxjs';
-import { RoutedEventEmitterService } from 'src/app/services/routed-event-emitter/routed-event-emitter.service';
+import { LoaderService } from 'src/app/services/loader/loader.service';
 
 @Component({
   selector: 'app-archive',
@@ -14,14 +13,11 @@ import { RoutedEventEmitterService } from 'src/app/services/routed-event-emitter
 })
 export class ArchiveComponent implements OnInit {
   public postsList: PostModel[] = [];
-  private subscription: Subscription;
-
   constructor(
     private activatedRoute: ActivatedRoute,
     private postService: PostService,
     private modelCtrl: ModalController,
-    private router : Router,
-    private rEventService : RoutedEventEmitterService
+    private loadingSvc: LoaderService
   ) {
     this.getCatId();
   }
@@ -31,14 +27,13 @@ export class ArchiveComponent implements OnInit {
    * Get current category id
    */
   private getCatId() {
-    let id = this.activatedRoute.snapshot.paramMap.get('id');
+    const id = this.activatedRoute.snapshot.paramMap.get('id');
 
     if (id) {
       try {
-        const catId = parseInt(id);
+        const catId = parseInt(id, 10);
         this.getPosts(catId);
-      }
-      catch (err) {
+      } catch (err) {
         alert(err);
       }
     }
@@ -47,18 +42,19 @@ export class ArchiveComponent implements OnInit {
 
   private async getPosts(categoryId?: number) {
     try {
+      this.loadingSvc.show();
       this.postsList = await this.postService.getPostArchive(categoryId, 10, 1);
-    }
-    catch (err) { alert(err); };
+      this.loadingSvc.hide();
+    } catch (err) { alert(err); this.loadingSvc.hide(); }
   }
 
   ngOnInit() {
-    
+
   }
 
   public async viewPost(p: PostModel) {
     if (p) {
-      let model = await this.modelCtrl.create({
+      const model = await this.modelCtrl.create({
         component: SingleNewsComponent,
         componentProps: {
           post: p

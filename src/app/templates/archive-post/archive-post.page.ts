@@ -11,7 +11,7 @@ import { SingleNewsComponent } from 'src/app/home/components/single-news/single-
 export class ArchivePostPage implements OnInit {
 
 
-  public isVideo: boolean = false;
+  public isVideo = false;
 
   @Input() post: PostModel;
 
@@ -22,10 +22,12 @@ export class ArchivePostPage implements OnInit {
   ngOnInit() {
     this.isVideo = this.post.categoryList.some(cat => cat.categoryId === 47);
   }
-
+  /**
+   * Go to single post page
+   */
   public async viewPost() {
     if (this.post) {
-      let model = await this.modelCtrl.create({
+      const model = await this.modelCtrl.create({
         component: SingleNewsComponent,
         componentProps: {
           post: this.post
@@ -36,9 +38,9 @@ export class ArchivePostPage implements OnInit {
   }
 
 
-  public sharePost(ev : MouseEvent) {
+  public sharePost(ev: MouseEvent) {
     ev.stopPropagation();
-    ev.preventDefault();    
+    ev.preventDefault();
     if ('share' in navigator) {
       window.navigator['share']({
         title: this.post.title,
@@ -47,8 +49,7 @@ export class ArchivePostPage implements OnInit {
       }).catch(err => {
 
       });
-    }
-    else {
+    } else {
       alert('share api is not supported in your device');
     }
   }

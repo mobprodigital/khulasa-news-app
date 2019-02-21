@@ -23,22 +23,18 @@ export class AjaxService {
       this.http.get(this.baseUrl.english, {
         params: params
       }).subscribe(
-        ((resp : any) => {
-          if(resp.status === 200){
+        ((resp: any) => {
+          if (resp.status === 200) {
             resolve(resp.data);
-          }
-          else{
+          } else {
             reject(resp.message);
           }
         }),
-        (err : HttpErrorResponse) => {
+        (err: HttpErrorResponse) => {
           reject(err.message);
         },
-        () => {
-          console.log('completed');
-        }
-      )
-    })
+      );
+    });
   }
 
 }

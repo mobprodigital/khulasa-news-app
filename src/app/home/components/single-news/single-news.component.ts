@@ -18,22 +18,10 @@ interface SliderPostType {
 })
 export class SingleNewsComponent implements OnInit {
 
+  /** List of ids whos prev post is fetched */
+  private postFetchedList: Set<number> = new Set();
   public youTubeUrl: SafeResourceUrl;
   public isVideoPost = false;
-  /* public sliderPosts: [SliderPostType, SliderPostType, SliderPostType] = [
-    {
-      post: null,
-      relatedPosts: null,
-    },
-    {
-      post: null,
-      relatedPosts: null
-    },
-    {
-      post: null,
-      relatedPosts: null
-    },
-  ]; */
   public sliderPosts: SliderPostType[] = [];
   @ViewChild('postSlider') slider: IonSlides;
 
@@ -67,23 +55,16 @@ export class SingleNewsComponent implements OnInit {
       try {
         const postData1 = await this.getNextPost(postData.postId);
         this.sliderPosts.push(postData1);
+        this.postFetchedList.add(postData.postId);
+
         const postData2 = await this.getNextPost(postData1.post.postId);
         this.sliderPosts.push(postData2);
+        this.postFetchedList.add(postData1.post.postId);
+
       } catch (err) {
         alert(err);
       }
     }
-
-    /* if (postData) {
-      this.sliderPosts[0].post = postData;
-      this.postService.getRelatedPosts(postData.postId).then(rp => {
-        this.sliderPosts[0].relatedPosts = rp;
-      });
-
-      const nextPost = await this.getNextPost(postData.postId);
-      this.sliderPosts[1] = nextPost;
-      this.sliderPosts[2] = await this.getNextPost(nextPost.post.postId);
-    } */
   }
 
 
@@ -123,14 +104,23 @@ export class SingleNewsComponent implements OnInit {
 
   public async onSlideNext() {
     const activeIndex = await this.slider.getActiveIndex();
-    if (activeIndex !== null && activeIndex !== undefined) {
-      if (activeIndex >= (this.sliderPosts.length - 2)) {
-        const lastPost = this.sliderPosts[this.sliderPosts.length - 1];
-        if (lastPost) {
-          const nextPost = await this.getNextPost(lastPost.post.postId);
-          if (nextPost) {
-            this.sliderPosts.push(nextPost);
-          }
+    if (activeIndex !== null && activeIndex !== undefined && (activeIndex >= this.sliderPosts.length - 3)) {
+      const lastPost = this.sliderPosts[this.sliderPosts.length - 1];
+      if (lastPost) {
+
+        /**
+       * check if next post is already fetched
+       */
+        const isAlReadyExist: boolean = this.postFetchedList.has(lastPost.post.postId);
+        if (isAlReadyExist) {
+          return;
+        }
+
+        this.postFetchedList.add(lastPost.post.postId);
+
+        const nextPost = await this.getNextPost(lastPost.post.postId);
+        if (nextPost) {
+          this.sliderPosts.push(nextPost);
         }
       }
     }
@@ -140,7 +130,7 @@ export class SingleNewsComponent implements OnInit {
     try {
       const nextPostPromise = await Promise.all(
         [
-          this.postService.getAdjecentPost(postId),
+          this.postService.getAdjecentPost(postId, 'previous', 'full', 'true'),
           this.postService.getRelatedPosts(postId)
         ])
         .catch(err => undefined);

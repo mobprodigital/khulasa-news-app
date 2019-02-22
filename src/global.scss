@@ -32,7 +32,7 @@ $textRed : #d33939;
 
 @mixin posttitle {
     font-family: $ff-bhaji !important;
-    margin: 4px 0 0 0;
+    margin: 10px 0 0 0;
     font-size: 1.25rem;
     text-transform: uppercase;
     line-height: 21px;
@@ -42,6 +42,11 @@ $textRed : #d33939;
 @mixin meta-data($font-size, $color) {
     font-size: $font-size;
     color: $color;
+}
+
+
+.modal-wrapper.modal-wrapper-md.sc-ion-modal-md {
+    background: rgba(0, 0, 0, 0.8784313725490196);
 }
 
 .custom-icon {

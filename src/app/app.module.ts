@@ -9,10 +9,11 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { HttpClientModule } from '@angular/common/http';
+import { ChooseLangComponent } from './home/components/choose-lang/choose-lang.component';
 
 @NgModule({
-  declarations: [AppComponent],
-  entryComponents: [],
+  declarations: [AppComponent, ChooseLangComponent],
+  entryComponents: [ChooseLangComponent],
   imports: [
     BrowserModule,
     HttpClientModule,

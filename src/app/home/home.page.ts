@@ -29,14 +29,13 @@ export class HomePage implements OnDestroy, OnInit {
   private async getMenu() {
     try {
       this.menuCategories = await this.postService.getMenuCategories();
-    }
-    catch (err) {
+    } catch (err) {
       alert(err);
     }
   }
 
   public openMenu() {
-    this.menuCtrl.open()
+    this.menuCtrl.open();
   }
 
 

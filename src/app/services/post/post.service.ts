@@ -112,13 +112,19 @@ export class PostService {
    * @param postId current the post id
    * @param postDirection (default is previous) Next of previous post
    * @param contentLength (default is full )length of content
+   * @param inSameCategory (default is false ) Weather you want the post of same category
    */
   public getAdjecentPost(
     postId: number,
     postDirection: 'next' | 'previous' = 'previous',
-    contentLength: 'full' | 'short' = 'full'): Promise<PostModel> {
+    contentLength: 'full' | 'short' = 'full',
+    inSameCategory: 'true' | 'false' = 'false'
+  ): Promise<PostModel> {
     return new Promise((resolve, reject) => {
-      let params = new HttpParams().set('postId', postId.toString()).set('contentLength', contentLength);
+      let params = new HttpParams()
+        .set('postId', postId.toString())
+        .set('contentLength', contentLength)
+        .set('inSameCategory', inSameCategory);
       if (postDirection === 'next') {
         params = params.set('action', 'get_next_post');
       } else if (postDirection === 'previous') {

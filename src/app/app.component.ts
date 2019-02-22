@@ -1,9 +1,12 @@
 import { Component } from '@angular/core';
 
-import { Platform, MenuController } from '@ionic/angular';
+import { Platform, MenuController, NavController, ModalController } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { PostService } from './services/post/post.service';
+import { ChooseLangComponent } from './home/components/choose-lang/choose-lang.component';
+import { LoaderService } from './services/loader/loader.service';
+import { strict } from 'assert';
 
 @Component({
   selector: 'app-root',
@@ -42,11 +45,14 @@ export class AppComponent {
     ];
 
   constructor(
+    private modalCtrl: ModalController,
     private platform: Platform,
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
     private postService: PostService,
-    private menuCtrl: MenuController
+    private menuCtrl: MenuController,
+    private navCtrl: NavController,
+    private loaderService: LoaderService
   ) {
     this.initializeApp();
   }
@@ -70,7 +76,7 @@ export class AppComponent {
       this.appPages.push(...[
         {
           title: 'Choose language',
-          url: '/home',
+          url: 'lang',
           icon: this.iconsArr[this.iconsArr.length - 1],
           id: 0
         },
@@ -79,28 +85,55 @@ export class AppComponent {
           url: '/home',
           icon: '',
           id: 0,
-          color : "#d33939"
+          color: "#d33939"
         },
         {
           title: 'About Us',
           url: '/home',
           icon: '',
           id: 0,
-          color : "#d33939"
+          color: "#d33939"
         },
         {
           title: 'App Version',
           url: '/home',
           icon: '',
           id: 0,
-          color : "#d33939"
+          color: "#d33939"
         },
-      ])
+      ]);
 
     });
   }
 
   public closeMenu() {
     this.menuCtrl.close('main-menu');
+  }
+
+  public openPage(page: any) {
+    if (page.url === 'lang') {
+      this.chooseLang();
+    } else {
+      this.navCtrl.navigateForward(['/home/archive', page.id]);
+    }
+  }
+
+  private async chooseLang() {
+    const langModal = await this.modalCtrl.create({
+      component: ChooseLangComponent,
+      cssClass: 'lang-modal'
+    });
+
+    langModal.present();
+    langModal.onDidDismiss().then((data) => {
+      const choosedLang: string = data['data'];
+      if (choosedLang !== localStorage.getItem('lang')) {
+        localStorage.setItem('lang', choosedLang);
+        this.loaderService.show();
+        window.document.location.reload();
+      }
+
+    });
+
   }
 }

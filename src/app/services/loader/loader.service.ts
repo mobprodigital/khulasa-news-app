@@ -7,6 +7,8 @@ import { LoadingOptions } from '@ionic/core';
 })
 export class LoaderService {
 
+  /** Returns true if loader is now visible else returns false */
+  public isVisible: boolean = false;
   private loader: HTMLIonLoadingElement;
   private loaderOptn: LoadingOptions = {
     keyboardClose: false,
@@ -20,16 +22,23 @@ export class LoaderService {
 
   public async show(options?: LoadingOptions) {
     try {
+      if (this.isVisible) {
+        return;
+      }
       this.loader = await this.loadinCtrl.create((options ? options : this.loaderOptn));
       await this.loader.present();
+      this.isVisible = true;
     } catch (err) {
+      this.isVisible = false;
       console.log('err in loading service : ', err);
     }
   }
 
   public async hide() {
     if (this.loader) {
-      this.loader.dismiss();
+      this.loader.dismiss().then(() => {
+        this.isVisible = false;
+      }).catch(err => this.isVisible = false);
     }
   }
 }

@@ -14,7 +14,7 @@ export class ChooseLangComponent implements OnInit {
   }
 
 
-  public chooseLang(lang: 'hindi' | 'eng') {
+  public chooseLang(lang: string) {
     this.modalCtrl.dismiss(lang);
   }
 

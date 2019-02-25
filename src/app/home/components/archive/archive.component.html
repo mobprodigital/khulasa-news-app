@@ -1,3 +1,42 @@
-<div class="post-archive-wrap" *ngIf="postsList && postsList.length > 0">
-  <app-archive-post *ngFor="let p of postsList" [post]="p"></app-archive-post>
-</div>
+<ion-header>
+  <ion-toolbar>
+    <div class="menu-header">
+      <img class="custom-icon" (click)="openMenu()" src="assets/icons/menu.png" alt="menu">
+      <img class="custom-icon logo" src="assets/logo/logo.png" alt="logo">
+      <img class="custom-icon" src="assets/icons/search.png" alt="setting">
+    </div>
+  </ion-toolbar>
+
+
+  <ion-segment (ionChange)="slideTo()" [(ngModel)]="activeTabIndex" *ngIf="catPostList && catPostList.length > 0"
+    scrollable>
+    <ng-container *ngFor="let menuItem of catPostList; let i = index">
+      <ion-segment-button [value]="i">
+        {{menuItem.category.categoryName}}
+      </ion-segment-button>
+    </ng-container>
+  </ion-segment>
+
+</ion-header>
+
+<ion-content>
+
+  <div *ngIf="catPostList && catPostList.length > 0">
+    <ion-slides #postSlider (ionSlideNextEnd)="onSlideNext()" (ionSlidePrevEnd)="onSlidePrev()">
+      <ion-slide *ngFor="let menuSlide of catPostList">
+        <article class="post-archive-wrap" *ngIf="menuSlide.posts && menuSlide.posts.length > 0; else postLoading">
+          <app-archive-post *ngFor="let p of menuSlide.posts" [post]="p"></app-archive-post>
+        </article>
+        <ng-template #postLoading>
+          <div class="post-loader">
+            <ion-spinner></ion-spinner>
+          </div>
+        </ng-template>
+      </ion-slide>
+    </ion-slides>
+  </div>
+
+  <!-- <div class="post-archive-wrap" *ngIf="postsList && postsList.length > 0">
+    <app-archive-post *ngFor="let p of postsList" [post]="p"></app-archive-post>
+  </div> -->
+</ion-content>

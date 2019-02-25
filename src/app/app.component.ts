@@ -6,7 +6,6 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { PostService } from './services/post/post.service';
 import { ChooseLangComponent } from './home/components/choose-lang/choose-lang.component';
 import { LoaderService } from './services/loader/loader.service';
-import { strict } from 'assert';
 
 @Component({
   selector: 'app-root',
@@ -66,6 +65,12 @@ export class AppComponent {
   }
 
   private async getMenuCategories() {
+
+    const lang: string = localStorage.getItem('lang');
+    if (lang !== 'hin' && lang !== 'eng') {
+      const v = await this.chooseLang();
+    }
+
     this.postService.getMenuCategories().then(cats => {
       this.appPages.push(...cats.map((c, i) => ({
         title: c.categoryName,
@@ -85,21 +90,21 @@ export class AppComponent {
           url: '/home',
           icon: '',
           id: 0,
-          color: "#d33939"
+          color: '#d33939'
         },
         {
           title: 'About Us',
           url: '/home',
           icon: '',
           id: 0,
-          color: "#d33939"
+          color: '#d33939'
         },
         {
           title: 'App Version',
           url: '/home',
           icon: '',
           id: 0,
-          color: "#d33939"
+          color: '#d33939'
         },
       ]);
 
@@ -118,22 +123,24 @@ export class AppComponent {
     }
   }
 
-  private async chooseLang() {
+  private async chooseLang(): Promise<void> {
+
     const langModal = await this.modalCtrl.create({
       component: ChooseLangComponent,
       cssClass: 'lang-modal'
     });
 
-    langModal.present();
-    langModal.onDidDismiss().then((data) => {
-      const choosedLang: string = data['data'];
-      if (choosedLang !== localStorage.getItem('lang')) {
-        localStorage.setItem('lang', choosedLang);
-        this.loaderService.show();
-        window.document.location.reload();
-      }
+    langModal.present().catch(err => alert(err));
+    const data = await langModal.onDidDismiss();
 
-    });
+    const choosedLang: string = data['data'];
+    if (choosedLang && (choosedLang !== localStorage.getItem('lang'))) {
+      localStorage.setItem('lang', choosedLang);
+      this.loaderService.show();
+      window.document.location.reload();
+    }
+
+    return Promise.resolve();
 
   }
 }

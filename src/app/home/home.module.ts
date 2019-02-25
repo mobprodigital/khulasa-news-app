@@ -19,22 +19,17 @@ import { RoutedEventEmitterService } from '../services/routed-event-emitter/rout
     RouterModule.forChild([
       {
         path: '',
-        component: HomePage,
-        children: [
+        component: ArchiveComponent,
+        /* children: [
           {
             path: 'archive/:id',
             component: ArchiveComponent
           }
-        ]
-      },
-      {
-        path: 'single/:id',
-        component: SingleNewsComponent
+        ] */
       }
-      ,
-
     ])
   ],
+  entryComponents : [SingleNewsComponent],
   declarations: [HomePage, ArchivePostPage, ArchiveComponent, SingleNewsComponent],
   providers: [RoutedEventEmitterService]
 })

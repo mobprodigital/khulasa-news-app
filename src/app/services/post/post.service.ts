@@ -20,7 +20,8 @@ export class PostService {
   public getPostArchive(categoryId: number): Promise<PostModel[]>;
   public getPostArchive(categoryId: number, count: number): Promise<PostModel[]>;
   public getPostArchive(categoryId: number, count: number, from: number): Promise<PostModel[]>;
-  public getPostArchive(catId?: number, count?: number, from?: number): Promise<PostModel[]> {
+  public getPostArchive(categoryId: number, count: number, from: number, contentLength: 'full' | 'short'): Promise<PostModel[]>;
+  public getPostArchive(catId?: number, count?: number, from?: number, contentLength?: 'full' | 'short'): Promise<PostModel[]> {
 
     return new Promise((res, rej) => {
       let params: HttpParams = new HttpParams().set('action', 'get_post_archive');
@@ -36,7 +37,11 @@ export class PostService {
         params = params.set('from', from.toString());
       }
 
-      params = params.set('content_length', 'full');
+      if (contentLength) {
+        params = params.set('content_length', contentLength);
+      } else{
+        params = params.set('content_length', 'full');
+      }
 
       this.http.get(params).then((response: any) => {
         const posts = this.parsePosts(response);
@@ -64,10 +69,22 @@ export class PostService {
 
   public getMenuCategories(): Promise<PostCategoryModel[]> {
     return new Promise((res, rej) => {
-      this.http.get(new HttpParams().set('action', 'get_menu')).then(menu => {
-        const _menu = this.parsePostCategories(menu);
-        res(_menu);
-      }).catch(err => rej(err));
+
+      const localMenuData: any = localStorage.getItem('kn_menu');
+      if (localMenuData) {
+        try {
+          const data: PostCategoryModel[] = this.parsePostCategories(JSON.parse(localMenuData));
+          res(data);
+        } catch (err) {
+          console.error(err);
+        }
+      } else {
+        this.http.get(new HttpParams().set('action', 'get_menu')).then(menu => {
+          const _menu = this.parsePostCategories(menu);
+          localStorage.setItem('kn_menu', JSON.stringify(menu));
+          res(_menu);
+        }).catch(err => rej(err));
+      }
     });
   }
 

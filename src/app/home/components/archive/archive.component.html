@@ -8,10 +8,9 @@
   </ion-toolbar>
 
 
-  <ion-segment (ionChange)="slideTo()" [(ngModel)]="activeTabIndex" *ngIf="catPostList && catPostList.length > 0"
-    scrollable>
+  <ion-segment [(ngModel)]="activeTabIndex" *ngIf="catPostList && catPostList.length > 0" scrollable>
     <ng-container *ngFor="let menuItem of catPostList; let i = index">
-      <ion-segment-button [value]="i">
+      <ion-segment-button (click)="slideTo(i)" [value]="i">
         {{menuItem.category.categoryName}}
       </ion-segment-button>
     </ng-container>
@@ -24,19 +23,27 @@
   <div *ngIf="catPostList && catPostList.length > 0">
     <ion-slides #postSlider (ionSlideNextEnd)="onSlideNext()" (ionSlidePrevEnd)="onSlidePrev()">
       <ion-slide *ngFor="let menuSlide of catPostList">
-        <article class="post-archive-wrap" *ngIf="menuSlide.posts && menuSlide.posts.length > 0; else postLoading">
-          <app-archive-post *ngFor="let p of menuSlide.posts" [post]="p"></app-archive-post>
-        </article>
-        <ng-template #postLoading>
+        <ng-container *ngIf="menuSlide.loading ; then loading; else postLoaded"></ng-container>
+
+        <ng-template #loading>
           <div class="post-loader">
             <ion-spinner></ion-spinner>
           </div>
         </ng-template>
+
+        <ng-template #postLoaded>
+          <article *ngIf="menuSlide.posts && menuSlide.posts.length; else postError" class="post-archive-wrap">
+            <app-archive-post *ngFor="let p of menuSlide.posts" [post]="p"></app-archive-post>
+          </article>
+        </ng-template>
+        <ng-template #postError>
+          <div>
+            Something went wrong . Try again later
+          </div>
+        </ng-template>
+
       </ion-slide>
     </ion-slides>
   </div>
 
-  <!-- <div class="post-archive-wrap" *ngIf="postsList && postsList.length > 0">
-    <app-archive-post *ngFor="let p of postsList" [post]="p"></app-archive-post>
-  </div> -->
 </ion-content>

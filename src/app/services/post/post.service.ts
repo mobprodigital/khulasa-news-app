@@ -16,11 +16,6 @@ export class PostService {
   }
 
 
-  public getPostArchive(): Promise<PostModel[]>;
-  public getPostArchive(categoryId: number): Promise<PostModel[]>;
-  public getPostArchive(categoryId: number, count: number): Promise<PostModel[]>;
-  public getPostArchive(categoryId: number, count: number, from: number): Promise<PostModel[]>;
-  public getPostArchive(categoryId: number, count: number, from: number, contentLength: 'full' | 'short'): Promise<PostModel[]>;
   public getPostArchive(catId?: number, count?: number, from?: number, contentLength?: 'full' | 'short'): Promise<PostModel[]> {
 
     return new Promise((res, rej) => {
@@ -39,7 +34,7 @@ export class PostService {
 
       if (contentLength) {
         params = params.set('content_length', contentLength);
-      } else{
+      } else {
         params = params.set('content_length', 'full');
       }
 

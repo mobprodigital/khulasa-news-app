@@ -3,7 +3,6 @@ import { PostService } from 'src/app/services/post/post.service';
 import { PostModel } from 'src/app/models/post.model';
 import { ModalController, MenuController, IonSlides } from '@ionic/angular';
 import { SingleNewsComponent } from '../single-news/single-news.component';
-import { LoaderService } from 'src/app/services/loader/loader.service';
 import { PostCategoryModel } from 'src/app/models/post-category.model';
 
 
@@ -15,7 +14,8 @@ type catWisePost = {
   /**
    * All posts of this category id
    */
-  posts: PostModel[]
+  posts: PostModel[],
+  loading: boolean
 };
 
 @Component({
@@ -36,7 +36,6 @@ export class ArchiveComponent implements OnInit {
   constructor(
     private postService: PostService,
     private modelCtrl: ModalController,
-    private loadingService: LoaderService,
     private menuCtrl: MenuController,
   ) {
     // this.getCatId();
@@ -46,7 +45,7 @@ export class ArchiveComponent implements OnInit {
   private async getMenu() {
     try {
       const catList: PostCategoryModel[] = await this.postService.getMenuCategories();
-      this.catPostList = <catWisePost[]>catList.map(cat => ({ category: cat, posts: [] }));
+      this.catPostList = <catWisePost[]>catList.map(cat => ({ category: cat, posts: [], loading: true }));
       this.getPosts(catList[0].categoryId);
       this.getPosts(catList[1].categoryId);
       this.getPosts(catList[2].categoryId);
@@ -65,15 +64,13 @@ export class ArchiveComponent implements OnInit {
    */
   private async getPosts(categoryId?: number) {
     try {
-      // this.loadingService.show();
       const posts: PostModel[] = await this.postService.getPostArchive(categoryId, 10, 1);
       const targetCategory: catWisePost = this.catPostList.find(cat => cat.category.categoryId === categoryId);
       if (targetCategory) {
         targetCategory.posts = posts;
+        targetCategory.loading = false;
       }
-
-      // this.loadingService.hide();
-    } catch (err) { alert(err); this.loadingService.hide(); }
+    } catch (err) { alert(err); }
   }
 
   ngOnInit() {
@@ -93,10 +90,22 @@ export class ArchiveComponent implements OnInit {
   }
 
 
+  private getSlideIndex(index: number, offset: number, length: number): number {
+    const num = index + offset;
+    if (num > length - 1) {
+      return length - 1;
+    } else {
+      return num;
+    }
+  }
+
   public async onSlideNext() {
     const activeIndex = await this.slider.getActiveIndex();
-    const targetCategory = this.catPostList[activeIndex + 2];
+    const slidesCount = await this.slider.length();
+    const targetIndex = this.getSlideIndex(activeIndex, 2, slidesCount);
+    const targetCategory = this.catPostList[targetIndex];
     if (targetCategory && targetCategory.posts && targetCategory.posts.length === 0) {
+      targetCategory.loading = true;
       this.getPosts(targetCategory.category.categoryId);
     }
     this.activeTabIndex = activeIndex;
@@ -104,11 +113,30 @@ export class ArchiveComponent implements OnInit {
 
   public async onSlidePrev() {
     const activeIndex = await this.slider.getActiveIndex();
+    const targetCategory = this.catPostList[activeIndex];
+    if (targetCategory && targetCategory.posts && targetCategory.posts.length === 0) {
+      targetCategory.loading = true;
+      this.getPosts(targetCategory.category.categoryId);
+    }
     this.activeTabIndex = activeIndex;
   }
 
-  public slideTo() {
-    this.slider.slideTo(this.activeTabIndex, 500);
-    this.getPosts(this.catPostList[this.activeTabIndex].category.categoryId);
+  public async slideTo(targetIndex: number) {
+
+    this.slider.slideTo(targetIndex, 500, false);
+
+    const targetCategory = this.catPostList[targetIndex];
+    if (targetCategory && targetCategory.posts && targetCategory.posts.length === 0) {
+      targetCategory.loading = true;
+      this.getPosts(targetCategory.category.categoryId);
+    }
+    if (targetIndex < await this.slider.length()) {
+      const targetCategoryNext = this.catPostList[targetIndex + 1];
+      if (targetCategoryNext && targetCategoryNext.posts && targetCategoryNext.posts.length === 0) {
+        targetCategoryNext.loading = true;
+        this.getPosts(targetCategoryNext.category.categoryId);
+      }
+    }
+
   }
 }

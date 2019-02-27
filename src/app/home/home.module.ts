@@ -20,16 +20,10 @@ import { RoutedEventEmitterService } from '../services/routed-event-emitter/rout
       {
         path: '',
         component: ArchiveComponent,
-        /* children: [
-          {
-            path: 'archive/:id',
-            component: ArchiveComponent
-          }
-        ] */
       }
     ])
   ],
-  entryComponents : [SingleNewsComponent],
+  entryComponents: [SingleNewsComponent],
   declarations: [HomePage, ArchivePostPage, ArchiveComponent, SingleNewsComponent],
   providers: [RoutedEventEmitterService]
 })

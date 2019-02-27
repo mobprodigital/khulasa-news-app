@@ -10,6 +10,7 @@ import { ArchiveComponent } from './components/archive/archive.component';
 import { SingleNewsComponent } from './components/single-news/single-news.component';
 import { RoutedEventEmitterService } from '../services/routed-event-emitter/routed-event-emitter.service';
 
+
 @NgModule({
   imports: [
     CommonModule,

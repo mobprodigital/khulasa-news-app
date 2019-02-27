@@ -6,7 +6,7 @@ import { SingleNewsComponent } from '../single-news/single-news.component';
 import { PostCategoryModel } from 'src/app/models/post-category.model';
 
 
-type catWisePost = {
+type CatWisePost = {
   /**
    * Post category name
    */
@@ -15,7 +15,15 @@ type catWisePost = {
    * All posts of this category id
    */
   posts: PostModel[],
-  loading: boolean
+  /**
+   * Show inital loader
+   */
+  loading: boolean,
+  /**
+   * Show loader while next posts are fethcing 
+   */
+  nextPostLoading: boolean,
+  errMessage: string
 };
 
 @Component({
@@ -27,7 +35,7 @@ export class ArchiveComponent implements OnInit {
 
 
   /** Category wise posts list */
-  public catPostList: catWisePost[] = [];
+  public catPostList: CatWisePost[] = [];
   public activeTabIndex = 0;
   public postsList: PostModel[] = [];
   public menuCategories: PostCategoryModel[] = [];
@@ -45,7 +53,12 @@ export class ArchiveComponent implements OnInit {
   private async getMenu() {
     try {
       const catList: PostCategoryModel[] = await this.postService.getMenuCategories();
-      this.catPostList = <catWisePost[]>catList.map(cat => ({ category: cat, posts: [], loading: true }));
+      this.catPostList = <CatWisePost[]>catList.map(cat => (<CatWisePost>{
+        category: cat,
+        posts: [],
+        loading: true,
+        nextPostLoading: false
+      }));
       this.getPosts(catList[0].categoryId);
       this.getPosts(catList[1].categoryId);
       this.getPosts(catList[2].categoryId);
@@ -62,15 +75,22 @@ export class ArchiveComponent implements OnInit {
    * Get posts by category id
    * @param categoryId category id
    */
-  private async getPosts(categoryId?: number) {
+  private async getPosts(categoryId?: number, from: number = 1, count: number = 10) {
+    const targetCategory: CatWisePost = this.catPostList.find(cat => cat.category.categoryId === categoryId);
+
+    targetCategory.errMessage = null;
     try {
-      const posts: PostModel[] = await this.postService.getPostArchive(categoryId, 10, 1);
-      const targetCategory: catWisePost = this.catPostList.find(cat => cat.category.categoryId === categoryId);
-      if (targetCategory) {
-        targetCategory.posts = posts;
+      const posts: PostModel[] = await this.postService.getPostArchive(categoryId, count, from);
+      if (targetCategory && posts.length > 0) {
+        targetCategory.posts.push(...posts);
         targetCategory.loading = false;
+        targetCategory.nextPostLoading = false;
       }
-    } catch (err) { alert(err); }
+    } catch (err) {
+      targetCategory.loading = false;
+      targetCategory.nextPostLoading = false;
+      targetCategory.errMessage = err;
+    }
   }
 
   ngOnInit() {
@@ -99,7 +119,8 @@ export class ArchiveComponent implements OnInit {
     }
   }
 
-  public async onSlideNext() {
+
+  public async onSlideNext(e: any) {
     const activeIndex = await this.slider.getActiveIndex();
     const slidesCount = await this.slider.length();
     const targetIndex = this.getSlideIndex(activeIndex, 2, slidesCount);
@@ -124,10 +145,10 @@ export class ArchiveComponent implements OnInit {
   public async slideTo(targetIndex: number) {
 
     this.slider.slideTo(targetIndex, 500, false);
-
     const targetCategory = this.catPostList[targetIndex];
     if (targetCategory && targetCategory.posts && targetCategory.posts.length === 0) {
       targetCategory.loading = true;
+
       this.getPosts(targetCategory.category.categoryId);
     }
     if (targetIndex < await this.slider.length()) {
@@ -139,4 +160,15 @@ export class ArchiveComponent implements OnInit {
     }
 
   }
+
+  /**
+   * load more posts
+   */
+  public async loadMore(category: CatWisePost) {
+    if (category) {
+      category.nextPostLoading = true;
+      this.getPosts(category.category.categoryId, category.posts.length + 1);
+    }
+  }
+
 }

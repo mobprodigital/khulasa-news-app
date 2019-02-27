@@ -11,6 +11,7 @@ import { SingleNewsComponent } from './components/single-news/single-news.compon
 import { RoutedEventEmitterService } from '../services/routed-event-emitter/routed-event-emitter.service';
 import { SingalPageComponent } from './components/singal-page/singal-page.component';
 
+
 @NgModule({
   imports: [
     CommonModule,

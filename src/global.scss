@@ -44,8 +44,16 @@ $textRed : #d33939;
     color: $color;
 }
 
+.alert {
+    font-size: 25px;
+    padding: 7px;
 
-.modal-wrapper.modal-wrapper-md.sc-ion-modal-md {
+    &.alert-danger {
+        background-color: rgb(255, 131, 131);
+    }
+}
+
+.lang-modal .modal-wrapper.modal-wrapper-md.sc-ion-modal-md {
     background: rgba(0, 0, 0, 0.8784313725490196);
 }
 
@@ -58,11 +66,13 @@ $textRed : #d33939;
     justify-content: space-between;
     align-content: center;
     align-items: center;
-    padding: 0px 10px;
+    padding: 0px 5px;
 
     .custom-icon {
         cursor: pointer;
         width: 25px;
+        padding: 5px;
+        box-sizing: content-box;
     }
 
     img.logo {
@@ -89,7 +99,7 @@ ion-label.maneu-label>span {
             width: 100%;
             background-position: center;
             background-size: cover;
-            padding-top: 30.43%;
+            padding-top: 50%;
             position: relative;
 
             .share-icon {
@@ -109,7 +119,7 @@ ion-label.maneu-label>span {
             }
 
             .post-thumbnail {
-                padding-top: 46.8%;
+                padding-top: 50%;
             }
 
             .share-icon {

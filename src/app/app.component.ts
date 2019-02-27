@@ -4,7 +4,7 @@ import { Platform, MenuController, NavController, ModalController } from '@ionic
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { PostService } from './services/post/post.service';
-import { ChooseLangComponent } from './home/components/choose-lang/choose-lang.component';
+import { ChooseLangComponent } from './shared/components/choose-lang/choose-lang.component';
 import { LoaderService } from './services/loader/loader.service';
 import { SingalPageComponent } from './home/components/singal-page/singal-page.component';
 

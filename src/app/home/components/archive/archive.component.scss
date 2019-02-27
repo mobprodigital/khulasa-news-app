@@ -1,7 +1,10 @@
 .post-loader {
-    min-height: 80vh;
     width: 100%;
     display: flex;
     justify-content: center;
-    align-items: CENTER;
+    align-items: center;
+
+    &.full-height {
+        min-height: 80vh;
+    }
 }

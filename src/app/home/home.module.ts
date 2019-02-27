@@ -9,6 +9,7 @@ import { ArchivePostPage } from '../templates/archive-post/archive-post.page';
 import { ArchiveComponent } from './components/archive/archive.component';
 import { SingleNewsComponent } from './components/single-news/single-news.component';
 import { RoutedEventEmitterService } from '../services/routed-event-emitter/routed-event-emitter.service';
+import { SingalPageComponent } from './components/singal-page/singal-page.component';
 
 @NgModule({
   imports: [
@@ -24,7 +25,7 @@ import { RoutedEventEmitterService } from '../services/routed-event-emitter/rout
     ])
   ],
   entryComponents: [SingleNewsComponent],
-  declarations: [HomePage, ArchivePostPage, ArchiveComponent, SingleNewsComponent],
+  declarations: [HomePage, ArchivePostPage, ArchiveComponent, SingleNewsComponent, SingalPageComponent],
   providers: [RoutedEventEmitterService]
 })
 export class HomePageModule { }

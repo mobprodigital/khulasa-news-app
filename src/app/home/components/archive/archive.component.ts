@@ -4,6 +4,7 @@ import { PostModel } from 'src/app/models/post.model';
 import { ModalController, MenuController, IonSlides } from '@ionic/angular';
 import { SingleNewsComponent } from '../single-news/single-news.component';
 import { PostCategoryModel } from 'src/app/models/post-category.model';
+import { SearchComponent } from 'src/app/shared/components/search/search.component';
 
 
 type CatWisePost = {
@@ -169,6 +170,15 @@ export class ArchiveComponent implements OnInit {
       category.nextPostLoading = true;
       this.getPosts(category.category.categoryId, category.posts.length + 1);
     }
+  }
+
+  public async openSearch() {
+    const searchModal = await this.modelCtrl.create({
+      component: SearchComponent,
+      id: 'search-model'
+    });
+
+    searchModal.present();
   }
 
 }

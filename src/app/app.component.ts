@@ -6,6 +6,7 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { PostService } from './services/post/post.service';
 import { ChooseLangComponent } from './shared/components/choose-lang/choose-lang.component';
 import { LoaderService } from './services/loader/loader.service';
+import { SingalPageComponent } from './shared/components/singal-page/singal-page.component';
 
 @Component({
   selector: 'app-root',
@@ -87,16 +88,16 @@ export class AppComponent {
         },
         {
           title: 'Contact Us',
-          url: '/home',
+          url: 'contact_us',
           icon: '',
-          id: 0,
+          id: 76,
           color: '#d33939'
         },
         {
           title: 'About Us',
-          url: '/home',
+          url: 'about_us',
           icon: '',
-          id: 0,
+          id: 71,
           color: '#d33939'
         },
         {
@@ -118,10 +119,27 @@ export class AppComponent {
   public openPage(page: any) {
     if (page.url === 'lang') {
       this.chooseLang();
-    } else {
+    } else if (page.url == 'about_us') {
+      this.showPageModal({ pageId: page.id, pageTitle: page.title });
+      //this.navCtrl.navigateForward(['/home/page', page.id]);
+    } else if (page.url == 'contact_us') {
+      this.showPageModal({ pageId: page.id, pageTitle: page.title });
+      //this.navCtrl.navigateForward(['/home/page', page.id]);
+    }
+    else {
       this.navCtrl.navigateForward(['/home/archive', page.id]);
     }
   }
+
+  private async showPageModal(params: object): Promise<void> {
+    const pageModal = await this.modalCtrl.create({
+      component: SingalPageComponent,
+      componentProps: params
+    })
+    pageModal.present();
+  }
+
+
 
   private async chooseLang(): Promise<void> {
 

@@ -9,7 +9,7 @@ import { ArchivePostPage } from './components/archive-post/archive-post.page';
 @NgModule({
   entryComponents: [
     ChooseLangComponent,
-    SearchComponent
+    SearchComponent,
   ],
   declarations: [
     ChooseLangComponent,

@@ -10,7 +10,6 @@ import { SingleNewsComponent } from './components/single-news/single-news.compon
 import { RoutedEventEmitterService } from '../services/routed-event-emitter/routed-event-emitter.service';
 import { SharedModule } from '../shared/shared.module';
 
-
 @NgModule({
   imports: [
     CommonModule,

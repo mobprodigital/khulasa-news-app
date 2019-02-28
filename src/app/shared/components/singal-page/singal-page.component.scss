@@ -1,0 +1,16 @@
+.post-loader {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &.full-height {
+        min-height: 80vh;
+    }
+}
+
+.text-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

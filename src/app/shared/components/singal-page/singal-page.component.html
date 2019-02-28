@@ -1,0 +1,22 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-icon (click)="goBack()" name="arrow-back"></ion-icon>&nbsp;
+    </ion-buttons>
+    <ion-title *ngIf="pageTitle"> {{pageTitle}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content padding>
+
+  <div *ngIf="post">
+    <div class="post-content" [innerHtml]="post.content"></div>
+  </div>
+
+  <div *ngIf="loder" class="post-loader full-height">
+    <ion-spinner></ion-spinner>
+  </div>
+  <div *ngIf="errorMsg">
+    <div class="text-center">{{errorMsg}}</div>
+  </div>
+
+</ion-content>

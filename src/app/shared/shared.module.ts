@@ -3,23 +3,28 @@ import { CommonModule } from '@angular/common';
 import { ChooseLangComponent } from './components/choose-lang/choose-lang.component';
 import { SearchComponent } from './components/search/search.component';
 import { BrowserModule } from '@angular/platform-browser';
-
+import { SingalPageComponent } from './components/singal-page/singal-page.component';
+import { IonicModule, IonNav } from '@ionic/angular';
 @NgModule({
   entryComponents: [
     ChooseLangComponent,
-    SearchComponent
+    SearchComponent,
+    SingalPageComponent
   ],
   declarations: [
     ChooseLangComponent,
-    SearchComponent
+    SearchComponent,
+    SingalPageComponent
   ],
   imports: [
     CommonModule,
     BrowserModule,
+    IonicModule,
   ],
   exports: [
     ChooseLangComponent,
-    SearchComponent
+    SearchComponent,
+    SingalPageComponent
   ]
 })
 export class SharedModule { }

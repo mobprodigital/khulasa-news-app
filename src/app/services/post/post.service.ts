@@ -155,4 +155,34 @@ export class PostService {
     });
   }
 
+  /**
+   * Search posts in database
+   * @param searchTerm Search term string
+   */
+  public searchPosts(
+    searchTerm: string,
+    from: number = 1,
+    count: number = 10,
+    contentLength: 'full' | 'short' = 'short'): Promise<PostModel[]> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const resp = await this.http.get(
+          new HttpParams().set('action', 'search_posts')
+            .set('search_term', searchTerm)
+            .set('from', from.toString())
+            .set('count', count.toString())
+            .set('content_length', contentLength)
+        );
+        if (resp) {
+          const posts = this.parsePosts(resp);
+          resolve(posts);
+        } else {
+          reject('No result found');
+        }
+      } catch (err) {
+        reject(err);
+      }
+    });
+  }
+
 }

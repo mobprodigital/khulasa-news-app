@@ -3,7 +3,8 @@ import { IonicModule} from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { ChooseLangComponent } from './components/choose-lang/choose-lang.component';
 import { SearchComponent } from './components/search/search.component';
-import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule } from '@angular/forms';
+import { ArchivePostPage } from './components/archive-post/archive-post.page';
 
 @NgModule({
   entryComponents: [
@@ -12,16 +13,18 @@ import { BrowserModule } from '@angular/platform-browser';
   ],
   declarations: [
     ChooseLangComponent,
-    SearchComponent
+    SearchComponent,
+    ArchivePostPage
   ],
   imports: [
     CommonModule,
     IonicModule,
-    BrowserModule,
+    FormsModule
   ],
   exports: [
     ChooseLangComponent,
-    SearchComponent
+    SearchComponent,
+    ArchivePostPage
   ]
 })
 export class SharedModule { }

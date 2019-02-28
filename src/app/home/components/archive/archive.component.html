@@ -24,8 +24,6 @@
     <ion-slides #postSlider (ionSlideNextEnd)="onSlideNext($event)" (ionSlidePrevEnd)="onSlidePrev()">
       <ion-slide *ngFor="let menuSlide of catPostList">
         <section>
-
-
           <ng-container *ngIf="menuSlide.loading ; then postsLoading; else postLoaded"></ng-container>
           <ng-template #postLoaded>
             <div *ngIf="menuSlide.posts && menuSlide.posts.length > 0; else hasError">

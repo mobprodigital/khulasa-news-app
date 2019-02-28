@@ -1,9 +1,28 @@
 <ion-header>
   <ion-toolbar>
-    <ion-searchbar placeholder="Search news..."></ion-searchbar>
+    <ion-searchbar debounce="1500" clear-icon (ionChange)="searchNews()" [(ngModel)]="searchTerm" placeholder="Search news..."></ion-searchbar>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content padding>
+  <ng-container>
+    <ion-progress-bar [hidden]="!loading" type="indeterminate"></ion-progress-bar>
+  </ng-container>
+  <ng-container *ngIf="searhResults && searhResults.length > 0; then hasContent; else noContent"></ng-container>
 
+  <ng-template #hasContent>
+    <article class="post-archive-wrap">
+      <app-archive-post *ngFor="let p of searhResults" [post]="p"></app-archive-post>
+    </article>
+
+    <div>
+      <ion-progress-bar [hidden]="!loadMoreLoading" type="indeterminate"></ion-progress-bar>
+      <ion-button [hidden]="loadMoreLoading" (click)="loadMoreNews()" expand="full">View more</ion-button>
+    </div>
+  </ng-template>
+  <ng-template #noContent>
+    <div [hidden]="!errMsg" class="alert alert-danger">
+      {{errMsg}}
+    </div>
+  </ng-template>
 </ion-content>

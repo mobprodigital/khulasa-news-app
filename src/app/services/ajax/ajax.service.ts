@@ -23,7 +23,7 @@ export class AjaxService {
   public get(params: HttpParams): Promise<any> {
     return new Promise((resolve, reject) => {
       this.http.get(this.activeBaseUrl, {
-        params: params
+        params: params,
       }).subscribe(
         ((resp: any) => {
           if (resp.status === 200) {

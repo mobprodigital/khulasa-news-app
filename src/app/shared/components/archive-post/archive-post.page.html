@@ -1,4 +1,5 @@
 <article class="post-archive-single" [ngClass]="{'Videos' : isVideo}" *ngIf="post">
+  <ion-ripple-effect></ion-ripple-effect>
   <div (click)="viewPost()" class="post-thumbnail" [style.background-image]="'url(' + post.thumbnail + ')'">
     <span class="share-icon">
       <img *ngIf="!isVideo" (click)="sharePost($event)" class="custom-icon" src="assets/icons/share.png" alt="share" />
@@ -12,7 +13,7 @@
         | <span class="post-date">{{post.date | date}}</span>
       </span>
     </div>
-    <span  *ngIf="isVideo" class="share-icon">
+    <span *ngIf="isVideo" class="share-icon">
       <img (click)="sharePost($event)" class="custom-icon" src="assets/icons/share.png" alt="share" />
     </span>
 

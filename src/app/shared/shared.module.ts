@@ -5,16 +5,19 @@ import { ChooseLangComponent } from './components/choose-lang/choose-lang.compon
 import { SearchComponent } from './components/search/search.component';
 import { FormsModule } from '@angular/forms';
 import { ArchivePostPage } from './components/archive-post/archive-post.page';
+import { SingalPageComponent } from './components/singal-page/singal-page.component';
 
 @NgModule({
   entryComponents: [
     ChooseLangComponent,
     SearchComponent,
+    SingalPageComponent
   ],
   declarations: [
     ChooseLangComponent,
     SearchComponent,
-    ArchivePostPage
+    ArchivePostPage,
+    SingalPageComponent
   ],
   imports: [
     CommonModule,

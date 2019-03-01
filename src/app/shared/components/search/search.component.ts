@@ -22,11 +22,14 @@ export class SearchComponent implements OnInit {
   public async searchNews() {
     this.errMsg = '';
     if (this.searchTerm) {
+      this.loading = true;
       try {
         this.searhResults = await this.getSearchPosts();
+        this.loading = false;
       } catch (err) {
         this.searhResults = [];
         this.errMsg = err;
+        this.loading = false;
       }
     }
   }
@@ -34,9 +37,8 @@ export class SearchComponent implements OnInit {
   private getSearchPosts(from: number = 1, count: number = 10): Promise<PostModel[]> {
     return new Promise(async (resolve, reject) => {
       try {
-        this.loading = true;
+
         const result = await this.postService.searchPosts(this.searchTerm, from, count, 'full');
-        this.loading = false;
         if (result) {
           resolve(result);
         } else {

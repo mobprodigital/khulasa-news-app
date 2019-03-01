@@ -25,6 +25,9 @@ $ff-bhaji : 'bhaji';
 
 $textRed : #d33939;
 
+.no-transform {
+    transform: none !important;
+}
 
 .text-red {
     color: $textRed !important;
@@ -35,7 +38,7 @@ $textRed : #d33939;
     margin: 10px 0 0 0;
     font-size: 1.25rem;
     text-transform: uppercase;
-    line-height: 21px;
+    line-height: 25px;
     color: #212121;
 }
 
@@ -101,6 +104,10 @@ ion-label.maneu-label>span {
             background-size: cover;
             padding-top: 50%;
             position: relative;
+
+            img {
+                transform: none !important;
+            }
 
             .share-icon {
                 position: absolute;

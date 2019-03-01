@@ -150,4 +150,16 @@ export class SingleNewsComponent implements OnInit {
     }
   }
 
+  public async viewPost(p: PostModel) {
+    if (p) {
+      const model = await this.modalCtrl.create({
+        component: SingleNewsComponent,
+        componentProps: {
+          post: p
+        }
+      });
+      model.present();
+    }
+  }
+
 }

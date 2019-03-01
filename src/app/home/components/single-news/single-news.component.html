@@ -5,7 +5,6 @@
         <ion-icon name="arrow-back"></ion-icon> &nbsp; Back
       </ion-button>
     </ion-buttons>
-    <!-- <ion-title>Back</ion-title> -->
   </ion-toolbar>
 </ion-header>
 <ion-content padding>
@@ -20,7 +19,7 @@
           <ng-template #notVideo>
             <div class="single-post" *ngIf="postSlide.post">
               <header class="post-thumbnail">
-                <img [src]="postSlide.post.thumbnail" alt="post thumbnail">
+                <img [src]="postSlide.post.thumbnail" class="no-transform" alt="post thumbnail">
               </header>
               <h1 class="post-title">{{postSlide.post.title}}</h1>
               <div class="post-meta">
@@ -34,10 +33,10 @@
                     </ion-col>
                     <ion-col size="3" no-padding align-self-center class="text-right icons-action">
                       <span class="comm-icon">
-                        <img class="custom-icon" src="assets/icons/comment.png" alt="comment" />
+                        <img class="custom-icon no-transform" src="assets/icons/comment.png" alt="comment" />
                       </span>
                       <span class="share-icon">
-                        <img (click)="sharePost($event, postSlide.post)" class="custom-icon" src="assets/icons/share.png"
+                        <img (click)="sharePost($event, postSlide.post)" class="no-transform custom-icon" src="assets/icons/share.png"
                           alt="share" />
                       </span>
                     </ion-col>
@@ -49,14 +48,16 @@
           </ng-template>
 
           <section *ngIf="postSlide.relatedPosts && postSlide.relatedPosts.length > 0" class="related-posts-wrapper">
-            <aside class="related-post" *ngFor="let rp of postSlide.relatedPosts">
-              <div class="r-p-thumbnail" [style.background-image]="'url(' + rp.thumbnail + ')'">
-              </div>
-              <div class="r-p-data">
-                <h3 class="r-p-title">
-                  {{rp.title}}
-                </h3>
-              </div>
+
+            <aside  class="related-post" *ngFor="let rp of postSlide.relatedPosts">
+                <div (click)="viewPost(rp)" class="r-p-thumbnail" [style.background-image]="'url(' + rp.thumbnail + ')'">
+                </div>
+                <div (click)="viewPost(rp)" class="r-p-data">
+                  <h3 class="r-p-title">
+                    {{rp.title}}
+                  </h3>
+                </div>
+              
             </aside>
           </section>
         </section> <!-- post slide wrap -->

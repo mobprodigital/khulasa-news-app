@@ -1,9 +1,10 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-icon (click)="goBack()" name="arrow-back"></ion-icon>&nbsp;
+      <ion-button (click)="goBack()">
+        <ion-icon name="arrow-back"></ion-icon> &nbsp; {{pageTitle}}
+      </ion-button>
     </ion-buttons>
-    <ion-title *ngIf="pageTitle"> {{pageTitle}}</ion-title>
   </ion-toolbar>
 </ion-header>
 <ion-content padding>

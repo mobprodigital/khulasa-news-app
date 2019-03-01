@@ -181,4 +181,8 @@ export class ArchiveComponent implements OnInit {
     searchModal.present();
   }
 
+  public doRefresh(e) {
+    console.log(e);
+  }
+
 }

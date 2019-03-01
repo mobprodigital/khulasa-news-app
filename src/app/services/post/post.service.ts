@@ -83,10 +83,11 @@ export class PostService {
     });
   }
 
-  public getRelatedPosts(postId: number): Promise<PostModel[]> {
+  public getRelatedPosts(postId: number, contentLength: 'full' | 'short' = 'full'): Promise<PostModel[]> {
     return new Promise((resolve, reject) => {
       this.http.get(new HttpParams()
         .set('action', 'get_related_posts')
+        .set('content_length', contentLength)
         .set('post_id', postId.toString())
       ).then(data => {
         const posts = this.parsePosts(data);

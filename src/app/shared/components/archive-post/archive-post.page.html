@@ -1,4 +1,4 @@
-<article class="post-archive-single" [ngClass]="{'Videos' : isVideo}" *ngIf="post">
+<article class="post-archive-single ion-activatable p-relative" role="button" [ngClass]="{'Videos' : isVideo}" *ngIf="post">
   <ion-ripple-effect></ion-ripple-effect>
   <div (click)="viewPost()" class="post-thumbnail" [style.background-image]="'url(' + post.thumbnail + ')'">
     <span class="share-icon">

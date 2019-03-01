@@ -1,9 +1,15 @@
 <ion-header>
   <ion-toolbar>
     <div class="menu-header">
-      <img class="custom-icon" (click)="openMenu()" src="assets/icons/menu.png" alt="menu">
+      <span class="ion-activatable p-relative" role="button">
+        <ion-ripple-effect type="bounded"></ion-ripple-effect>
+        <img class="custom-icon" (click)="openMenu()" src="assets/icons/menu.png" alt="menu">
+      </span>
       <img class="custom-icon logo" src="assets/logo/logo.png" alt="logo">
-      <img class="custom-icon" (click)="openSearch()" src="assets/icons/search.png" alt="setting">
+      <span class="ion-activatable p-relative" role="button">
+        <ion-ripple-effect type="bounded"></ion-ripple-effect>
+        <img class="custom-icon search-icon" (click)="openSearch()" src="assets/icons/search.png" alt="setting">
+      </span>
     </div>
   </ion-toolbar>
 
@@ -22,52 +28,51 @@
 
   <ion-content>
 
-        <div *ngIf="catPostList && catPostList.length > 0">
-          <ion-slides #postSlider (ionSlideNextEnd)="onSlideNext($event)" (ionSlidePrevEnd)="onSlidePrev()">
-            <ion-slide *ngFor="let menuSlide of catPostList">
-              <section>
-                <ng-container *ngIf="menuSlide.loading ; then postsLoading; else postLoaded"></ng-container>
-                <ng-template #postLoaded>
-                  <div *ngIf="menuSlide.posts && menuSlide.posts.length > 0; else hasError">
+    <div *ngIf="catPostList && catPostList.length > 0">
+      <ion-slides #postSlider (ionSlideNextEnd)="onSlideNext($event)" (ionSlidePrevEnd)="onSlidePrev()">
+        <ion-slide *ngFor="let menuSlide of catPostList">
+          <section>
+            <ng-container *ngIf="menuSlide.loading ; then postsLoading; else postLoaded"></ng-container>
+            <ng-template #postLoaded>
+              <div *ngIf="menuSlide.posts && menuSlide.posts.length > 0; else hasError">
 
-                    <article class="post-archive-wrap">
-                      <app-archive-post *ngFor="let p of menuSlide.posts" [post]="p"></app-archive-post>
-                      <div>
-                        <div [hidden]="!menuSlide.nextPostLoading" class="post-loader">
-                          <ion-spinner></ion-spinner>
-                        </div>
-                        <section *ngIf="menuSlide.errMessage">
-                          <div>
-                            {{menuSlide?.errMessage}}
-                          </div>
-                        </section>
-                        <ion-button [hidden]="menuSlide.nextPostLoading" expand="full" (click)="loadMore(menuSlide)"
-                          color="primary">Load
-                          more</ion-button>
-                      </div>
-                    </article>
-                  </div>
-                </ng-template>
-
-
-                <ng-template #postsLoading>
-                  <div class="post-loader full-height">
-                    <ion-spinner></ion-spinner>
-                  </div>
-                </ng-template>
-
-                <ng-template #hasError>
-                  <section *ngIf="menuSlide.errMessage">
-                    <div class="alert alert-danger">
-                      {{menuSlide?.errMessage}}
+                <article class="post-archive-wrap">
+                  <app-archive-post *ngFor="let p of menuSlide.posts" [post]="p"></app-archive-post>
+                  <div>
+                    <div [hidden]="!menuSlide.nextPostLoading" class="post-loader">
+                      <ion-spinner></ion-spinner>
                     </div>
-                  </section>
-                </ng-template>
+                    <section *ngIf="menuSlide.errMessage">
+                      <div>
+                        {{menuSlide?.errMessage}}
+                      </div>
+                    </section>
+                    <ion-button [hidden]="menuSlide.nextPostLoading" expand="full" (click)="loadMore(menuSlide)" color="primary">Load
+                      more</ion-button>
+                  </div>
+                </article>
+              </div>
+            </ng-template>
 
+
+            <ng-template #postsLoading>
+              <div class="post-loader full-height">
+                <ion-spinner></ion-spinner>
+              </div>
+            </ng-template>
+
+            <ng-template #hasError>
+              <section *ngIf="menuSlide.errMessage">
+                <div class="alert alert-danger">
+                  {{menuSlide?.errMessage}}
+                </div>
               </section>
-            </ion-slide>
-          </ion-slides>
-        </div>
+            </ng-template>
+
+          </section>
+        </ion-slide>
+      </ion-slides>
+    </div>
 
 
   </ion-content>

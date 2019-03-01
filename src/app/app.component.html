@@ -4,9 +4,15 @@
       <ion-header>
         <ion-toolbar>
           <div class="menu-header">
-            <img class="custom-icon" (click)="closeMenu()" src="assets/icons/menu.png" alt="menu">
+            <span class="ion-activatable p-relative" role="button">
+              <ion-ripple-effect type="bounded"></ion-ripple-effect>
+              <img class="custom-icon" (click)="closeMenu()" src="assets/icons/menu.png" alt="menu">
+            </span>
             <img class="custom-icon logo" src="assets/logo/logo.png" alt="logo">
-            <img class="custom-icon" src="assets/icons/setting.png" alt="setting">
+            <span class="ion-activatable p-relative" role="button">
+              <ion-ripple-effect type="bounded"></ion-ripple-effect>
+              <img class="custom-icon" src="assets/icons/setting.png" alt="setting" role="button">
+            </span>
           </div>
         </ion-toolbar>
       </ion-header>
@@ -28,7 +34,7 @@
         </ion-list>
       </ion-content>
     </ion-menu>
-    
+
     <ion-router-outlet main></ion-router-outlet>
   </ion-split-pane>
 </ion-app>

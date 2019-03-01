@@ -49,15 +49,16 @@
 
           <section *ngIf="postSlide.relatedPosts && postSlide.relatedPosts.length > 0" class="related-posts-wrapper">
 
-            <aside  class="related-post" *ngFor="let rp of postSlide.relatedPosts">
-                <div (click)="viewPost(rp)" class="r-p-thumbnail" [style.background-image]="'url(' + rp.thumbnail + ')'">
-                </div>
-                <div (click)="viewPost(rp)" class="r-p-data">
-                  <h3 class="r-p-title">
-                    {{rp.title}}
-                  </h3>
-                </div>
-              
+            <aside class="related-post ion-activatable p-relative" *ngFor="let rp of postSlide.relatedPosts">
+              <ion-ripple-effect></ion-ripple-effect>
+              <div (click)="viewPost(rp)" class="r-p-thumbnail" [style.background-image]="'url(' + rp.thumbnail + ')'">
+              </div>
+              <div (click)="viewPost(rp)" class="r-p-data">
+                <h3 class="r-p-title">
+                  {{rp.title}}
+                </h3>
+              </div>
+
             </aside>
           </section>
         </section> <!-- post slide wrap -->

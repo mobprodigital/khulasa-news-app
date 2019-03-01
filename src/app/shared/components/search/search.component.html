@@ -1,8 +1,19 @@
 <ion-header>
   <ion-toolbar>
-    <ion-searchbar debounce="1500" clear-icon (ionChange)="searchNews()" [(ngModel)]="searchTerm" placeholder="Search news..."></ion-searchbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()"><ion-icon slot="icon-only" name="arrow-back"></ion-icon></ion-button>
+    </ion-buttons>
+    <ion-searchbar 
+      animated="true" 
+      autocomplete="on" 
+      autocorrect="on" 
+      debounce="1500" 
+      clear-icon 
+      (ionChange)="searchNews()" 
+      [(ngModel)]="searchTerm" 
+      placeholder="Search news..."></ion-searchbar>
   </ion-toolbar>
-  <ion-progress-bar [hidden]="!loading" type="indeterminate"></ion-progress-bar>
+  <ion-progress-bar  [hidden]="!loading" type="indeterminate"></ion-progress-bar>
 </ion-header>
 
 <ion-content padding>

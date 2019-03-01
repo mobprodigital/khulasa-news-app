@@ -1,10 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { PostService } from 'src/app/services/post/post.service';
 import { PostModel } from 'src/app/models/post.model';
-import { ModalController, MenuController, IonSlides } from '@ionic/angular';
+import { ModalController, MenuController, IonSlides, Platform } from '@ionic/angular';
 import { SingleNewsComponent } from '../single-news/single-news.component';
 import { PostCategoryModel } from 'src/app/models/post-category.model';
 import { SearchComponent } from 'src/app/shared/components/search/search.component';
+import { AdMobFree } from '@ionic-native/admob-free/ngx';
 
 
 type CatWisePost = {
@@ -46,9 +47,26 @@ export class ArchiveComponent implements OnInit {
     private postService: PostService,
     private modelCtrl: ModalController,
     private menuCtrl: MenuController,
+    private adMob: AdMobFree,
+    private platform: Platform,
   ) {
-    // this.getCatId();
     this.getMenu();
+    this.showAd();
+  }
+
+
+  private async showAd() {
+    if (this.platform.is('cordova')) {
+      this.adMob.banner.config({
+        id: 'ca-app-pub-7769757158085259/4762590879',
+        autoShow: true,
+        isTesting: true,
+      });
+
+      this.adMob.banner.prepare()
+        .then(() => console.log('ad prepare success'))
+        .catch(err => console.error(err));
+    }
   }
 
   private async getMenu() {

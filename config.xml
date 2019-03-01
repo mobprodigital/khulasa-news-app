@@ -85,5 +85,8 @@
         <variable name="ANDROID_SUPPORT_V4_VERSION" value="24.1.1+" />
     </plugin>
     <plugin name="cordova-plugin-statusbar" spec="^2.4.2" />
+    <plugin name="cordova-plugin-admob-free" spec="0.25.0">
+        <variable name="ADMOB_APP_ID" value="ca-app-pub-7769757158085259/4762590879" />
+    </plugin>
     <engine name="android" spec="7.1.4" />
 </widget>

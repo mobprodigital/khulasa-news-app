@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-
+import { AdMobFree, AdMobFreeBannerConfig } from '@ionic-native/admob-free/ngx';
 import { Platform, MenuController, NavController, ModalController } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
@@ -52,7 +52,8 @@ export class AppComponent {
     private postService: PostService,
     private menuCtrl: MenuController,
     private navCtrl: NavController,
-    private loaderService: LoaderService
+    private loaderService: LoaderService,
+    private adMob: AdMobFree
   ) {
     this.initializeApp();
   }
@@ -62,7 +63,10 @@ export class AppComponent {
       this.statusBar.show();
       this.splashScreen.hide();
       this.getMenuCategories();
+
     });
+
+
   }
 
   private async getMenuCategories() {

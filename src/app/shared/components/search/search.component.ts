@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { PostService } from 'src/app/services/post/post.service';
 import { PostModel } from 'src/app/models/post.model';
+import { ModalController } from '@ionic/angular';
 
 @Component({
   selector: 'app-search',
@@ -14,7 +15,7 @@ export class SearchComponent implements OnInit {
   public errMsg: string;
   public loading: boolean = false;
   public loadMoreLoading: boolean = false;
-  constructor(private postService: PostService) { }
+  constructor(private postService: PostService, private modalCtrl: ModalController) { }
 
   ngOnInit() {
   }
@@ -68,6 +69,10 @@ export class SearchComponent implements OnInit {
       this.loadMoreLoading = false;
     }
 
+  }
+
+  public async goBack() {
+    this.modalCtrl.dismiss();
   }
 
 

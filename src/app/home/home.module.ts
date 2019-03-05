@@ -9,6 +9,7 @@ import { ArchiveComponent } from './components/archive/archive.component';
 import { SingleNewsComponent } from './components/single-news/single-news.component';
 import { RoutedEventEmitterService } from '../services/routed-event-emitter/routed-event-emitter.service';
 import { SharedModule } from '../shared/shared.module';
+import { AdMobFree } from '@ionic-native/admob-free/ngx';
 
 @NgModule({
   imports: [
@@ -25,6 +26,6 @@ import { SharedModule } from '../shared/shared.module';
   ],
   entryComponents: [SingleNewsComponent],
   declarations: [HomePage, ArchiveComponent, SingleNewsComponent],
-  providers: [RoutedEventEmitterService]
+  providers: [AdMobFree, RoutedEventEmitterService]
 })
 export class HomePageModule { }

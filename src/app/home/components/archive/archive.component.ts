@@ -50,22 +50,27 @@ export class ArchiveComponent implements OnInit {
     private adMob: AdMobFree,
     private platform: Platform,
   ) {
+    platform.ready().then(() => {
+      this.showAd();
+    });
     this.getMenu();
-    this.showAd();
   }
 
 
   private async showAd() {
     if (this.platform.is('cordova')) {
+
+
       this.adMob.banner.config({
-        id: 'ca-app-pub-7769757158085259/4762590879',
+        id: 'ca-app-pub-7769757158085259/7251294473',
         autoShow: true,
         isTesting: true,
       });
 
       this.adMob.banner.prepare()
-        .then(() => console.log('ad prepare success'))
-        .catch(err => console.error(err));
+        .then((msg) => console.log('archive page ad success', msg))
+        .catch(err => console.error('archive page ad failed ', err));
+
     }
   }
 

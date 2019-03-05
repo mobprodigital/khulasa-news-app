@@ -1,9 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { PostModel } from 'src/app/models/post.model';
 import { PostService } from 'src/app/services/post/post.service';
-import { NavParams, ModalController, IonSlides, } from '@ionic/angular';
+import { NavParams, ModalController, IonSlides, Platform, } from '@ionic/angular';
 import { SafeResourceUrl, DomSanitizer } from '@angular/platform-browser';
 import { PostCategoryModel } from 'src/app/models/post-category.model';
+import { AdMobFree } from '@ionic-native/admob-free/ngx';
 
 interface SliderPostType {
   post: PostModel;
@@ -34,7 +35,10 @@ export class SingleNewsComponent implements OnInit {
     private navParams: NavParams,
     private modalCtrl: ModalController,
     private domSanitizer: DomSanitizer,
+    private adMob: AdMobFree,
+    private platform: Platform,
   ) {
+    this.showAd();
   }
 
   ngOnInit() {
@@ -62,7 +66,7 @@ export class SingleNewsComponent implements OnInit {
         this.postFetchedList.add(postData1.post.postId);
 
       } catch (err) {
-        alert(err);
+        console.error(err);
       }
     }
   }
@@ -159,6 +163,20 @@ export class SingleNewsComponent implements OnInit {
         }
       });
       model.present();
+    }
+  }
+
+  private async showAd() {
+    if (this.platform.is('cordova')) {
+      this.adMob.interstitial.config({
+        id: 'ca-app-pub-7769757158085259/1049155691',
+        autoShow: true,
+        isTesting: true,
+      });
+
+      this.adMob.interstitial.prepare()
+      .then((msg) => console.log('single page ad success', msg))
+      .catch(err => console.error('single page ad failed ', err));
     }
   }
 

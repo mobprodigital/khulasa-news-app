@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.mojodigi.khulasa-news" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.mojodigi.khulasanews" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>Khulasa news</name>
     <description>Jan jan ki awaaz</description>
     <author email="gyan.p@morrisdigital.mobi" href="http://morrisdigital.mobi">Morris digital</author>
@@ -86,7 +86,7 @@
     </plugin>
     <plugin name="cordova-plugin-statusbar" spec="^2.4.2" />
     <plugin name="cordova-plugin-admob-free" spec="0.25.0">
-        <variable name="ADMOB_APP_ID" value="ca-app-pub-7769757158085259/4762590879" />
+        <variable name="ADMOB_APP_ID" value="ca-app-pub-7769757158085259~4762590879" />
     </plugin>
     <engine name="android" spec="7.1.4" />
 </widget>

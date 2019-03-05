@@ -25,8 +25,9 @@ export class SingalPageComponent implements OnInit {
   private getPost() {
     this.errorMsg = '';
     this.postService.getPost(this.pageId)
-      .then(data => { this.post = data; this.loder = false })
-      .catch(err => { this.errorMsg = err; this.loder = false });
+      .then(data => { this.post = data; })
+      .catch(err => { this.errorMsg = err; })
+      .finally(() => this.loder = false);
   }
   public goBack() {
     this.modalCtrl.dismiss();

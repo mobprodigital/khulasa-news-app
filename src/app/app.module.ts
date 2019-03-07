@@ -12,6 +12,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { SharedModule } from './shared/shared.module';
 import { AdMobFree } from '@ionic-native/admob-free/ngx';
 import { AppLangService } from './services/choose-lang/choose-lang.service';
+import { RoutedEventEmitterService } from './services/routed-event-emitter/routed-event-emitter.service';
 
 
 @NgModule({
@@ -28,6 +29,7 @@ import { AppLangService } from './services/choose-lang/choose-lang.service';
     StatusBar,
     SplashScreen,
     AdMobFree,
+    RoutedEventEmitterService,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

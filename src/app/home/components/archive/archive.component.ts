@@ -1,11 +1,12 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { PostService } from 'src/app/services/post/post.service';
 import { PostModel } from 'src/app/models/post.model';
-import { ModalController, MenuController, IonSlides, Platform } from '@ionic/angular';
+import { ModalController, MenuController, IonSlides, Platform, IonSegment } from '@ionic/angular';
 import { SingleNewsComponent } from '../single-news/single-news.component';
 import { PostCategoryModel } from 'src/app/models/post-category.model';
 import { SearchComponent } from 'src/app/shared/components/search/search.component';
 import { AdMobFree } from '@ionic-native/admob-free/ngx';
+import { RoutedEventEmitterService } from 'src/app/services/routed-event-emitter/routed-event-emitter.service';
 
 
 type CatWisePost = {
@@ -33,7 +34,7 @@ type CatWisePost = {
   templateUrl: './archive.component.html',
   styleUrls: ['./archive.component.scss'],
 })
-export class ArchiveComponent implements OnInit {
+export class ArchiveComponent implements OnInit, AfterViewInit {
 
 
   /** Category wise posts list */
@@ -41,6 +42,8 @@ export class ArchiveComponent implements OnInit {
   public activeTabIndex = 0;
   public postsList: PostModel[] = [];
   public menuCategories: PostCategoryModel[] = [];
+  @ViewChild('catSegment') catSegment: IonSegment;
+
   @ViewChild('postSlider') slider: IonSlides;
 
   constructor(
@@ -49,11 +52,21 @@ export class ArchiveComponent implements OnInit {
     private menuCtrl: MenuController,
     private adMob: AdMobFree,
     private platform: Platform,
+    private routedEvtEmitter: RoutedEventEmitterService
   ) {
-    platform.ready().then(() => {
+
+    this.platform.ready().then(() => {
       this.showAd();
     });
+
     this.getMenu();
+    this.routedEvtEmitter.eventEmitter.subscribe(
+      data => {
+        if (data.data && data.data.catId) {
+          this.setActiveTab(parseInt(data.data.catId, 10));
+        }
+      }
+    );
   }
 
 
@@ -83,11 +96,25 @@ export class ArchiveComponent implements OnInit {
         loading: true,
         nextPostLoading: false
       }));
+
       this.getPosts(catList[0].categoryId);
       this.getPosts(catList[1].categoryId);
       this.getPosts(catList[2].categoryId);
+
     } catch (err) {
       alert(err);
+    }
+  }
+
+  private async setActiveTab(catId: number): Promise<void> {
+    if (catId) {
+      for (let i = 0; i < this.catPostList.length; i++) {
+        if (this.catPostList[i].category.categoryId === catId) {
+          this.activeTabIndex = i;
+          this.slideTo(i);
+          break;
+        }
+      }
     }
   }
 
@@ -120,6 +147,10 @@ export class ArchiveComponent implements OnInit {
   ngOnInit() {
 
   }
+
+  ngAfterViewInit() {
+  }
+
 
   public async viewPost(p: PostModel) {
     if (p) {
@@ -166,8 +197,12 @@ export class ArchiveComponent implements OnInit {
     this.activeTabIndex = activeIndex;
   }
 
+  /**
+   * Slide to target index number
+   * @param targetIndex Target slide index number
+   */
   public async slideTo(targetIndex: number) {
-
+    this.scrollSegmentTo();
     this.slider.slideTo(targetIndex, 500, false);
     const targetCategory = this.catPostList[targetIndex];
     if (targetCategory && targetCategory.posts && targetCategory.posts.length === 0) {
@@ -182,6 +217,25 @@ export class ArchiveComponent implements OnInit {
         this.getPosts(targetCategoryNext.category.categoryId);
       }
     }
+
+  }
+
+  
+  private scrollTimer: any;
+
+  public async scrollSegmentTo() {
+    if (this.scrollTimer) {
+      window.clearTimeout(this.scrollTimer);
+    }
+    this.scrollTimer = setTimeout(() => {
+      const ele = this.catSegment['el'];
+      const activeTab: HTMLElement = ele.querySelector('.segment-button-checked');
+      const scrollCount = (activeTab.offsetLeft + (activeTab.clientWidth / 2)) - (ele.clientWidth / 2);
+      ele.scrollTo({
+        behavior: 'smooth',
+        left: scrollCount
+      });
+    }, 100);
 
   }
 
@@ -202,10 +256,6 @@ export class ArchiveComponent implements OnInit {
     });
 
     searchModal.present();
-  }
-
-  public doRefresh(e) {
-    console.log(e);
   }
 
 }

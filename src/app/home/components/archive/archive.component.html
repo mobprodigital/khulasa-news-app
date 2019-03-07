@@ -14,7 +14,7 @@
   </ion-toolbar>
 
 
-  <ion-segment [(ngModel)]="activeTabIndex" *ngIf="catPostList && catPostList.length > 0" scrollable>
+  <ion-segment (ionChange)="scrollSegmentTo()" #catSegment [(ngModel)]="activeTabIndex" *ngIf="catPostList && catPostList.length > 0" scrollable>
     <ng-container *ngFor="let menuItem of catPostList; let i = index">
       <ion-segment-button (click)="slideTo(i)" [value]="i">
         {{menuItem.category.categoryName}}

@@ -126,7 +126,7 @@ export class PostService {
       comments: (p.comments && p.comments.length > 0) ? this.parseComments(p.comments) : [],
       categoryList: (p.categoryList && p.categoryList.length > 0) ? this.parsePostCategories(p.categoryList) : []
     })) :
-    [];
+    []
 
   private parseComments = (comments: any[]): PostCommentModel[] => comments.map(c => new PostCommentModel(
     {

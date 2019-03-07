@@ -8,6 +8,8 @@ import { LoaderService } from './services/loader/loader.service';
 import { SingalPageComponent } from './shared/components/singal-page/singal-page.component';
 import { AppLanguageEnum } from './interfaces/app-lang.enum';
 import { AppLangService } from './services/choose-lang/choose-lang.service';
+import { Router } from '@angular/router';
+import { RoutedEventEmitterService } from './services/routed-event-emitter/routed-event-emitter.service';
 
 @Component({
   selector: 'app-root',
@@ -52,9 +54,9 @@ export class AppComponent {
     private statusBar: StatusBar,
     private postService: PostService,
     private menuCtrl: MenuController,
-    private navCtrl: NavController,
     private loaderService: LoaderService,
-    private langService: AppLangService
+    private langService: AppLangService,
+    private routeEvtEmitter: RoutedEventEmitterService
   ) {
     this.initializeApp();
   }
@@ -107,7 +109,7 @@ export class AppComponent {
         },
         {
           title: 'App Version',
-          url: '/home',
+          url: '/verion',
           icon: '',
           id: 0,
           color: '#d33939'
@@ -127,7 +129,9 @@ export class AppComponent {
     } else if (page.url === 'about_us' || page.url === 'contact_us') {
       this.showPageModal({ pageId: page.id, pageTitle: page.title });
     } else {
-      this.navCtrl.navigateForward(['/home/archive', page.id]);
+      this.routeEvtEmitter.sendMessage({
+        catId: page.id
+      });
     }
   }
 

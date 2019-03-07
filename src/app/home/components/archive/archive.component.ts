@@ -22,7 +22,7 @@ type CatWisePost = {
    */
   loading: boolean,
   /**
-   * Show loader while next posts are fethcing 
+   * Show loader while next posts are fethcing
    */
   nextPostLoading: boolean,
   errMessage: string

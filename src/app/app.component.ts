@@ -6,6 +6,8 @@ import { PostService } from './services/post/post.service';
 import { ChooseLangComponent } from './shared/components/choose-lang/choose-lang.component';
 import { LoaderService } from './services/loader/loader.service';
 import { SingalPageComponent } from './shared/components/singal-page/singal-page.component';
+import { AppLanguageEnum } from './interfaces/app-lang.enum';
+import { AppLangService } from './services/choose-lang/choose-lang.service';
 
 @Component({
   selector: 'app-root',
@@ -52,6 +54,7 @@ export class AppComponent {
     private menuCtrl: MenuController,
     private navCtrl: NavController,
     private loaderService: LoaderService,
+    private langService: AppLangService
   ) {
     this.initializeApp();
   }
@@ -68,9 +71,10 @@ export class AppComponent {
 
   private async getMenuCategories() {
 
-    const lang: string = localStorage.getItem('lang');
-    if (lang !== 'hin' && lang !== 'eng') {
+    const lang: string = localStorage.getItem('lang_choosen');
+    if (lang !== 'true') {
       const v = await this.chooseLang();
+      localStorage.setItem('lang_choosen', 'true');
     }
 
     this.postService.getMenuCategories().then(cats => {
@@ -120,14 +124,9 @@ export class AppComponent {
   public openPage(page: any) {
     if (page.url === 'lang') {
       this.chooseLang();
-    } else if (page.url == 'about_us') {
+    } else if (page.url === 'about_us' || page.url === 'contact_us') {
       this.showPageModal({ pageId: page.id, pageTitle: page.title });
-      //this.navCtrl.navigateForward(['/home/page', page.id]);
-    } else if (page.url == 'contact_us') {
-      this.showPageModal({ pageId: page.id, pageTitle: page.title });
-      //this.navCtrl.navigateForward(['/home/page', page.id]);
-    }
-    else {
+    } else {
       this.navCtrl.navigateForward(['/home/archive', page.id]);
     }
   }
@@ -152,9 +151,9 @@ export class AppComponent {
     langModal.present().catch(err => alert(err));
     const data = await langModal.onDidDismiss();
 
-    const choosedLang: string = data['data'];
-    if (choosedLang && (choosedLang !== localStorage.getItem('lang'))) {
-      localStorage.setItem('lang', choosedLang);
+    const choosedLang: AppLanguageEnum = data['data'];
+    if (choosedLang && choosedLang !== this.langService.selectedLang) {
+      this.langService.selectedLang = choosedLang;
       this.loaderService.show();
       window.document.location.reload();
     }

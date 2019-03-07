@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpParams, HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { AppLangService } from '../choose-lang/choose-lang.service';
+import { AppLanguageEnum } from 'src/app/interfaces/app-lang.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -15,9 +17,15 @@ export class AjaxService {
       hindi: 'http://hindi.khulasa-news.com/wp-admin/admin-ajax.php'
     };
 
-  private activeBaseUrl: string = localStorage.getItem('lang') === 'hin' ? this.baseUrl.hindi : this.baseUrl.english;
+  private activeBaseUrl: string = this.baseUrl.english;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private appLangService: AppLangService) {
+    if (appLangService.selectedLang === AppLanguageEnum.English) {
+      this.activeBaseUrl = this.baseUrl.english;
+    } else {
+      this.activeBaseUrl = this.baseUrl.hindi;
+    }
+  }
 
 
   public get(params: HttpParams): Promise<any> {

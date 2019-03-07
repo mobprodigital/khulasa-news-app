@@ -5,6 +5,12 @@
         <ion-icon name="arrow-back"></ion-icon> &nbsp; Back
       </ion-button>
     </ion-buttons>
+
+    <ion-buttons slot="end">
+      <ion-button (click)="sharePost()">
+        <ion-icon slot="icon-only" name="share"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 <ion-content padding>
@@ -32,13 +38,13 @@
                       <span class="post-date">{{postSlide.post.date | date}}</span>
                     </ion-col>
                     <ion-col size="3" no-padding align-self-center class="text-right icons-action">
-                      <span class="comm-icon">
+                      <!-- <span class="comm-icon">
                         <img class="custom-icon no-transform" src="assets/icons/comment.png" alt="comment" />
                       </span>
                       <span class="share-icon">
                         <img (click)="sharePost($event, postSlide.post)" class="no-transform custom-icon" src="assets/icons/share.png"
                           alt="share" />
-                      </span>
+                      </span> -->
                     </ion-col>
                   </ion-row>
                 </ion-grid>
@@ -46,6 +52,29 @@
               <div class="post-content" [innerHtml]="postSlide.post.content"></div>
             </div>
           </ng-template>
+
+          <section class="com-wrap" *ngIf="postSlide.post.comments && postSlide.post.comments.length > 0">
+            <header class="comm-head">Comments</header>
+            <aside *ngFor="let comm of postSlide.post.comments" class="comment-box">
+
+              <div class="comm-meta">
+                <ion-grid no-padding>
+                  <ion-row >
+                    <ion-col no-padding size="2">
+                      <div class="comm-author-img">
+                        <img src="/assets/icon/user-circle-solid.svg" alt="author" />
+                      </div>
+                    </ion-col>
+                    <ion-col size="10">
+                      <div class="comm-author">{{comm.author}}</div>
+                      <div class="comm-date">{{comm.commentDate | date}}</div>
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
+              </div>
+              <div [innerHTML]="comm.comment" class="comm-content"></div>
+            </aside>
+          </section>
 
           <section *ngIf="postSlide.relatedPosts && postSlide.relatedPosts.length > 0" class="related-posts-wrapper">
 

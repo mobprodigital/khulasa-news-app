@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
+import { AppLangService } from 'src/app/services/choose-lang/choose-lang.service';
+import { AppLanguageEnum } from 'src/app/interfaces/app-lang.enum';
 
 @Component({
   selector: 'app-choose-lang',
@@ -8,14 +10,15 @@ import { ModalController } from '@ionic/angular';
 })
 export class ChooseLangComponent implements OnInit {
 
-  constructor(private modalCtrl: ModalController) { }
+  constructor(private modalCtrl: ModalController, private appLangService: AppLangService) { }
 
   ngOnInit() {
   }
 
 
   public chooseLang(lang: string) {
-    this.modalCtrl.dismiss(lang);
+    const _lang: AppLanguageEnum = lang === AppLanguageEnum.Hindi ? AppLanguageEnum.Hindi : AppLanguageEnum.English;
+    this.modalCtrl.dismiss(_lang);
   }
 
 }

@@ -3,6 +3,9 @@ import { HttpParams } from '@angular/common/http';
 import { PostModel } from 'src/app/models/post.model';
 import { AjaxService } from '../ajax/ajax.service';
 import { PostCategoryModel } from 'src/app/models/post-category.model';
+import { PostCommentModel } from 'src/app/models/post-comment.model';
+import { AppLangService } from '../choose-lang/choose-lang.service';
+import { AppLanguageEnum } from 'src/app/interfaces/app-lang.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +13,8 @@ import { PostCategoryModel } from 'src/app/models/post-category.model';
 export class PostService {
 
   constructor(
-    private http: AjaxService
+    private http: AjaxService,
+    private appLangService: AppLangService
   ) {
 
   }
@@ -62,24 +66,36 @@ export class PostService {
     });
   }
 
-  public getMenuCategories(): Promise<PostCategoryModel[]> {
-    return new Promise((res, rej) => {
 
-      const localMenuData: any = localStorage.getItem('kn_menu');
+  private getLocalMenuData(): Promise<PostCategoryModel[]> {
+    return new Promise((resolve, reject) => {
+      const menuKey: string = this.appLangService.selectedLang === AppLanguageEnum.English ? 'kn_menu_eng' : 'kn_menu_hin';
+      const localMenuData: any = localStorage.getItem(menuKey);
       if (localMenuData) {
         try {
           const data: PostCategoryModel[] = this.parsePostCategories(JSON.parse(localMenuData));
-          res(data);
+          resolve(data);
         } catch (err) {
-          console.error(err);
+          reject('no local data found');
         }
       } else {
+        reject('no local data found');
+      }
+    });
+  }
+
+  public getMenuCategories(): Promise<PostCategoryModel[]> {
+    return new Promise((res, rej) => {
+      this.getLocalMenuData().then((localMenuData: PostCategoryModel[]) => {
+        res(localMenuData);
+      }).catch(() => {
         this.http.get(new HttpParams().set('action', 'get_menu')).then(menu => {
+          const menuKey: string = this.appLangService.selectedLang === AppLanguageEnum.English ? 'kn_menu_eng' : 'kn_menu_hin';
           const _menu = this.parsePostCategories(menu);
-          localStorage.setItem('kn_menu', JSON.stringify(menu));
+          localStorage.setItem(menuKey, JSON.stringify(menu));
           res(_menu);
         }).catch(err => rej(err));
-      }
+      });
     });
   }
 
@@ -107,9 +123,22 @@ export class PostService {
       portalUrl: p.url,
       thumbnail: p.thumbnail,
       date: p.date,
+      comments: (p.comments && p.comments.length > 0) ? this.parseComments(p.comments) : [],
       categoryList: (p.categoryList && p.categoryList.length > 0) ? this.parsePostCategories(p.categoryList) : []
     })) :
-    []
+    [];
+
+  private parseComments = (comments: any[]): PostCommentModel[] => comments.map(c => new PostCommentModel(
+    {
+      commnetId: c.comment_ID,
+      postId: c.comment_post_ID,
+      author: c.comment_author,
+      authorEmail: c.comment_author_email,
+      commentDate: c.comment_date,
+      comment: c.comment_content ? c.comment_content.replace(/[^\w\s]/gi, '') : '',
+      parentId: c.comment_parent
+    }
+  ))
 
   private parsePostCategories = (cats: any[]): PostCategoryModel[] => cats && cats.length > 0
     ? cats.map(c => new PostCategoryModel({

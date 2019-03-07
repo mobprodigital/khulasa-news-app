@@ -1,4 +1,5 @@
-import { PostCategoryModel } from "./post-category.model";
+import { PostCategoryModel } from './post-category.model';
+import { PostCommentModel } from './post-comment.model';
 
 export class PostModel {
     public postId: number;
@@ -11,15 +12,19 @@ export class PostModel {
     public portalUrl: string;
     public category: string;
     public categoryList: PostCategoryModel[];
+    public comments: PostCommentModel[] = [];
+
     constructor();
     /**
-     * Initialize properties 
-     * @param classProperties Properties of Post model class
+     * Initialize properties
+     * @param partialPostModel Properties of Post model class
      */
-    constructor(classProperties: Partial<PostModel>);
-    constructor(classProperties?: Partial<PostModel>) {
-        if (classProperties) {
-            Object.assign(this, classProperties);
+    constructor(partialPostModel: Partial<PostModel>);
+    constructor(args?: Partial<PostModel>) {
+        if (args) {
+            Object.keys(args).forEach(key => {
+                this[key] = args[key];
+            });
         }
     }
 }

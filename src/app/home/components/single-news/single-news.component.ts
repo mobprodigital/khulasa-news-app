@@ -38,7 +38,9 @@ export class SingleNewsComponent implements OnInit {
     private adMob: AdMobFree,
     private platform: Platform,
   ) {
-    this.showAd();
+    platform.ready().then(() => {
+      this.showAd();
+    });
   }
 
   ngOnInit() {
@@ -48,6 +50,7 @@ export class SingleNewsComponent implements OnInit {
   private async getNewsId() {
     const postData = <PostModel>this.navParams.get('post');
     if (postData) {
+      console.log(postData);
       this.sliderPosts.push({
         post: postData,
         relatedPosts: null,
@@ -92,10 +95,12 @@ export class SingleNewsComponent implements OnInit {
     this.modalCtrl.dismiss();
   }
 
-  public sharePost(ev: MouseEvent, post: PostModel) {
-    ev.stopPropagation();
+  public async sharePost() {
 
     if ('share' in navigator) {
+      const postIndex = await this.slider.getActiveIndex();
+      const post = this.sliderPosts[postIndex].post;
+
       window.navigator['share']({
         title: post.title,
         text: post.content.substr(0, 100),
@@ -167,6 +172,7 @@ export class SingleNewsComponent implements OnInit {
   }
 
   private async showAd() {
+    return;
     if (this.platform.is('cordova')) {
       this.adMob.interstitial.config({
         id: 'ca-app-pub-7769757158085259/1049155691',
@@ -175,8 +181,8 @@ export class SingleNewsComponent implements OnInit {
       });
 
       this.adMob.interstitial.prepare()
-      .then((msg) => console.log('single page ad success', msg))
-      .catch(err => console.error('single page ad failed ', err));
+        .then((msg) => console.log('single page ad success', msg))
+        .catch(err => console.error('single page ad failed ', err));
     }
   }
 

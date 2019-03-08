@@ -8,3 +8,9 @@
         min-height: 80vh;
     }
 }
+
+article.post-archive-wrap {
+    max-height: 85vh;
+    overflow: auto;
+    height: 100%;
+}

@@ -220,8 +220,9 @@ export class ArchiveComponent implements OnInit, AfterViewInit {
 
   }
 
-  
-  private scrollTimer: any;
+
+  /** sroll timer */
+  private scrollTimer: any; 
 
   public async scrollSegmentTo() {
     if (this.scrollTimer) {

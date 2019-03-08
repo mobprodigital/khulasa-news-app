@@ -50,7 +50,7 @@ export class SingleNewsComponent implements OnInit {
   private async getNewsId() {
     const postData = <PostModel>this.navParams.get('post');
     if (postData) {
-      console.log(postData);
+      
       this.sliderPosts.push({
         post: postData,
         relatedPosts: null,

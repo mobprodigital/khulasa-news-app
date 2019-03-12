@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
 
-import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
+import { IonicModule, IonicRouteStrategy, ToastController } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 
@@ -11,8 +11,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { HttpClientModule } from '@angular/common/http';
 import { SharedModule } from './shared/shared.module';
 import { AdMobFree } from '@ionic-native/admob-free/ngx';
-import { AppLangService } from './services/choose-lang/choose-lang.service';
 import { RoutedEventEmitterService } from './services/routed-event-emitter/routed-event-emitter.service';
+import { Network } from '@ionic-native/network/ngx';
 
 
 @NgModule({
@@ -28,7 +28,9 @@ import { RoutedEventEmitterService } from './services/routed-event-emitter/route
   providers: [
     StatusBar,
     SplashScreen,
+    ToastController,
     AdMobFree,
+    Network,
     RoutedEventEmitterService,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],

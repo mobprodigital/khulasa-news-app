@@ -17,7 +17,20 @@
     font-weight: normal;
 }
 
+
+
 $ff-bhaji : 'bhaji';
+
+.invisible {
+    visibility: hidden !important;
+}
+
+span.ap-version {
+    position: absolute;
+    right: 14px;
+    bottom: 13px;
+    font-size: 13px;
+}
 
 .text-right {
     text-align: right;

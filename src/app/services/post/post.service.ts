@@ -6,6 +6,7 @@ import { PostCategoryModel } from 'src/app/models/post-category.model';
 import { PostCommentModel } from 'src/app/models/post-comment.model';
 import { AppLangService } from '../choose-lang/choose-lang.service';
 import { AppLanguageEnum } from 'src/app/interfaces/app-lang.enum';
+import { SafeResourceUrl, DomSanitizer } from '@angular/platform-browser';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,8 @@ export class PostService {
 
   constructor(
     private http: AjaxService,
-    private appLangService: AppLangService
+    private appLangService: AppLangService,
+    private domSanitizer: DomSanitizer,
   ) {
 
   }
@@ -112,42 +114,80 @@ export class PostService {
     });
   }
 
-  private parsePosts = (posts: any[]): PostModel[] => posts && posts.length > 0
-    ? posts.map(p => new PostModel({
-      postId: p.id,
-      author: p.author,
-      slug: p.slug,
-      category: p.category,
-      content: p.content,
-      title: p.title,
-      portalUrl: p.url,
-      thumbnail: p.thumbnail,
-      date: p.date,
-      comments: (p.comments && p.comments.length > 0) ? this.parseComments(p.comments) : [],
-      categoryList: (p.categoryList && p.categoryList.length > 0) ? this.parsePostCategories(p.categoryList) : []
-    })) :
-    []
+  private parsePosts(posts: any[]): PostModel[] {
+    let postsArr: PostModel[] = [];
+    if (posts && posts.length > 0) {
+      postsArr = posts.map(p => {
 
-  private parseComments = (comments: any[]): PostCommentModel[] => comments.map(c => new PostCommentModel(
-    {
-      commnetId: c.comment_ID,
-      postId: c.comment_post_ID,
-      author: c.comment_author,
-      authorEmail: c.comment_author_email,
-      commentDate: c.comment_date,
-      comment: c.comment_content ? c.comment_content.replace(/[^\w\s]/gi, '') : '',
-      parentId: c.comment_parent
+        const post = new PostModel({
+          postId: p.id,
+          author: p.author,
+          slug: p.slug,
+          category: p.category,
+          content: p.content,
+          title: p.title,
+          portalUrl: p.url,
+          thumbnail: p.thumbnail,
+          date: p.date,
+          comments: (p.comments && p.comments.length > 0) ? this.parseComments(p.comments) : [],
+          categoryList: (p.categoryList && p.categoryList.length > 0) ? this.parsePostCategories(p.categoryList) : [],
+        });
+
+        post.isVideoPost = post.categoryList.some(c => c.categoryId === 47);
+        if (post.isVideoPost) {
+          post.videoUrl = this.getYoutubeUrl(post.content);
+        }
+        return post;
+      });
     }
-  ))
+    return postsArr;
+  }
 
-  private parsePostCategories = (cats: any[]): PostCategoryModel[] => cats && cats.length > 0
-    ? cats.map(c => new PostCategoryModel({
-      categoryId: c.categoryId,
-      categoryName: c.name,
-      postCount: c.postCount,
-      slug: c.slug,
-    })) :
-    []
+  /**
+   * get youtube yotube url from content string
+   * @param iframeString html string
+   */
+  public getYoutubeUrl(iframeString: string): SafeResourceUrl | null {
+    try {
+      const tempDiv: HTMLDivElement = document.createElement('div');
+      tempDiv.innerHTML = iframeString;
+      const ytIframe: HTMLIFrameElement = tempDiv.querySelector('iframe');
+      if (ytIframe) {
+        return this.domSanitizer.bypassSecurityTrustResourceUrl(ytIframe.src);
+      } else {
+        return null;
+      }
+    } catch (err) {
+      return null;
+    }
+  }
+
+  private parseComments(comments: any[]): PostCommentModel[] {
+    return comments.map(c => new PostCommentModel(
+      {
+        commnetId: c.comment_ID,
+        postId: c.comment_post_ID,
+        author: c.comment_author,
+        authorEmail: c.comment_author_email,
+        commentDate: c.comment_date,
+        comment: c.comment_content ? c.comment_content.replace(/[^\w\s]/gi, '') : '',
+        parentId: c.comment_parent
+      }
+    ));
+  }
+
+  private parsePostCategories(cats: any[]): PostCategoryModel[] {
+    let catArr: PostCategoryModel[] = [];
+    if (cats && cats.length > 0) {
+      catArr = cats.map(c => new PostCategoryModel({
+        categoryId: c.categoryId,
+        categoryName: c.name,
+        postCount: c.postCount,
+        slug: c.slug,
+      }));
+    }
+    return catArr;
+  }
 
   /**
    * Get next post of current post

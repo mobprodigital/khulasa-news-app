@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { Platform, MenuController, NavController, ModalController } from '@ionic/angular';
+import { Platform, MenuController, ModalController, ToastController } from '@ionic/angular';
+import { Network } from '@ionic-native/network/ngx';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { PostService } from './services/post/post.service';
@@ -8,7 +9,6 @@ import { LoaderService } from './services/loader/loader.service';
 import { SingalPageComponent } from './shared/components/singal-page/singal-page.component';
 import { AppLanguageEnum } from './interfaces/app-lang.enum';
 import { AppLangService } from './services/choose-lang/choose-lang.service';
-import { Router } from '@angular/router';
 import { RoutedEventEmitterService } from './services/routed-event-emitter/routed-event-emitter.service';
 
 @Component({
@@ -16,8 +16,6 @@ import { RoutedEventEmitterService } from './services/routed-event-emitter/route
   templateUrl: 'app.component.html'
 })
 export class AppComponent {
-
-
 
   public iconsArr: string[] = [
     'home.png',
@@ -56,7 +54,9 @@ export class AppComponent {
     private menuCtrl: MenuController,
     private loaderService: LoaderService,
     private langService: AppLangService,
-    private routeEvtEmitter: RoutedEventEmitterService
+    private routeEvtEmitter: RoutedEventEmitterService,
+    private network: Network,
+    private tost: ToastController
   ) {
     this.initializeApp();
   }
@@ -66,9 +66,35 @@ export class AppComponent {
       this.statusBar.show();
       this.splashScreen.hide();
       this.getMenuCategories();
+      if (this.platform.is('cordova')) {
+        this.networkErrHandle();
+      }
     });
 
 
+  }
+
+  private networkErrHandle() {
+    this.network.onDisconnect().subscribe(async () => {
+      const t = await this.tost.create({
+        message: 'Internet disconnected',
+        duration: 2000,
+        color: 'danger',
+        position : 'top'
+      });
+      t.present();
+    });
+
+    this.network.onConnect().subscribe(async () => {
+      const t = await this.tost.create({
+        message: 'Internet connected',
+        duration: 2000,
+        color: 'success',
+        position : 'top'
+      });
+
+      t.present();
+    });
   }
 
   private async getMenuCategories() {
@@ -107,13 +133,6 @@ export class AppComponent {
           id: 71,
           color: '#d33939'
         },
-        {
-          title: 'App Version',
-          url: '/verion',
-          icon: '',
-          id: 0,
-          color: '#d33939'
-        },
       ]);
 
     });
@@ -143,8 +162,6 @@ export class AppComponent {
     pageModal.present();
   }
 
-
-
   private async chooseLang(): Promise<void> {
 
     const langModal = await this.modalCtrl.create({
@@ -165,4 +182,5 @@ export class AppComponent {
     return Promise.resolve();
 
   }
+
 }

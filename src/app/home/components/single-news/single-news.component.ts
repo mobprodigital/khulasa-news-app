@@ -2,14 +2,12 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { PostModel } from 'src/app/models/post.model';
 import { PostService } from 'src/app/services/post/post.service';
 import { NavParams, ModalController, IonSlides, Platform, } from '@ionic/angular';
-import { SafeResourceUrl, DomSanitizer } from '@angular/platform-browser';
-import { PostCategoryModel } from 'src/app/models/post-category.model';
 import { AdMobFree } from '@ionic-native/admob-free/ngx';
 
 interface SliderPostType {
   post: PostModel;
   relatedPosts: PostModel[];
-  isVideo?: boolean;
+  // isVideo?: boolean;
 }
 
 @Component({
@@ -21,8 +19,6 @@ export class SingleNewsComponent implements OnInit {
 
   /** List of ids whos prev post is fetched */
   private postFetchedList: Set<number> = new Set();
-  public youTubeUrl: SafeResourceUrl;
-  public isVideoPost = false;
   public sliderPosts: SliderPostType[] = [];
   @ViewChild('postSlider') slider: IonSlides;
 
@@ -34,7 +30,6 @@ export class SingleNewsComponent implements OnInit {
     private postService: PostService,
     private navParams: NavParams,
     private modalCtrl: ModalController,
-    private domSanitizer: DomSanitizer,
     private adMob: AdMobFree,
     private platform: Platform,
   ) {
@@ -50,15 +45,16 @@ export class SingleNewsComponent implements OnInit {
   private async getNewsId() {
     const postData = <PostModel>this.navParams.get('post');
     if (postData) {
-      
+
       this.sliderPosts.push({
         post: postData,
         relatedPosts: null,
-        isVideo: postData.categoryList.some(c => c.categoryId === 47)
       });
+
       this.postService.getRelatedPosts(postData.postId).then(rp => {
         this.sliderPosts[0].relatedPosts = rp;
       });
+
       try {
         const postData1 = await this.getNextPost(postData.postId);
         this.sliderPosts.push(postData1);
@@ -74,22 +70,6 @@ export class SingleNewsComponent implements OnInit {
     }
   }
 
-
-  /**
-   * get youtube yotube url from content string
-   * @param iframeString html string
-   */
-  public geturl(iframeString: string): SafeResourceUrl | null {
-    const tempDiv: HTMLDivElement = document.createElement('div');
-    tempDiv.innerHTML = iframeString;
-    const ytIframe: HTMLIFrameElement = tempDiv.querySelector('iframe');
-    if (ytIframe) {
-      return this.domSanitizer.bypassSecurityTrustResourceUrl(ytIframe.src);
-    } else {
-      return null;
-    }
-
-  }
 
   public goBack() {
     this.modalCtrl.dismiss();
@@ -113,6 +93,7 @@ export class SingleNewsComponent implements OnInit {
 
   public async onSlideNext() {
     const activeIndex = await this.slider.getActiveIndex();
+    this.stopVideo(activeIndex - 1);
     if (activeIndex !== null && activeIndex !== undefined && (activeIndex >= this.sliderPosts.length - 3)) {
       const lastPost = this.sliderPosts[this.sliderPosts.length - 1];
       if (lastPost) {
@@ -135,6 +116,34 @@ export class SingleNewsComponent implements OnInit {
     }
   }
 
+  public async onSlidePrev() {
+    const activeIndex = await this.slider.getActiveIndex();
+    this.stopVideo(activeIndex + 1);
+  }
+
+  /**
+   * Stop currently playing youtube video
+   * @param targetIndex terget slider index
+   */
+  private async stopVideo(targetIndex: number): Promise<void> {
+    if (this.sliderPosts[targetIndex].post.isVideoPost) {
+      const slides = this.slider['el'];
+      if (slides) {
+        const swipeWrapper = slides.querySelector('.swiper-wrapper');
+        if (swipeWrapper) {
+          const targetSlide = swipeWrapper.children[targetIndex];
+          if (targetSlide) {
+            const iframe = targetSlide.querySelector('iframe');
+            if (iframe) {
+              const iframeSrc = iframe.src;
+              iframe.src = iframeSrc;
+            }
+          }
+        }
+      }
+    }
+  }
+
   public async getNextPost(postId: number): Promise<SliderPostType> {
     try {
       const nextPostPromise = await Promise.all(
@@ -147,7 +156,6 @@ export class SingleNewsComponent implements OnInit {
         const nextPost: SliderPostType = {
           post: nextPostPromise[0],
           relatedPosts: nextPostPromise[1],
-          isVideo: nextPostPromise[0].categoryList.some((cat: PostCategoryModel) => cat.categoryId === 47)
         };
         return nextPost;
       } else {
@@ -161,6 +169,7 @@ export class SingleNewsComponent implements OnInit {
 
   public async viewPost(p: PostModel) {
     if (p) {
+      this.slider.getActiveIndex().then(activeIndex => this.stopVideo(activeIndex));
       const model = await this.modalCtrl.create({
         component: SingleNewsComponent,
         componentProps: {

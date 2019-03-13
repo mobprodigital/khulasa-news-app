@@ -46,6 +46,8 @@ export class AppComponent {
         'news.png',
         'politics.png',
         'world.png',
+        'punjab.png',
+        'up.png',
         'business.png',
         'sports.png',
         'video.png',
@@ -68,7 +70,7 @@ export class AppComponent {
     private langService: AppLangService,
     private routeEvtEmitter: RoutedEventEmitterService,
     private network: Network,
-    private tost: ToastController
+    private tost: ToastController,
   ) {
     this.initializeApp();
   }
@@ -111,6 +113,8 @@ export class AppComponent {
 
   private async getMenuCategories() {
 
+    const activeLang: AppLanguageEnum = this.langService.selectedLang;
+
     const lang: string = localStorage.getItem('lang_choosen');
     if (lang !== 'true') {
       const v = await this.chooseLang();
@@ -122,13 +126,14 @@ export class AppComponent {
         title: c.categoryName,
         url: 'home',
         id: c.categoryId,
-        icon: this.iconsArr.eng[i]
+        icon: activeLang === AppLanguageEnum.English ? this.iconsArr.eng[i] : this.iconsArr.hin[i]
       })));
       this.appPages.push(...[
         {
           title: 'Choose language',
           url: 'lang',
-          icon: this.iconsArr.eng[this.iconsArr.eng.length - 1],
+          icon: (activeLang === AppLanguageEnum.English) ?
+            this.iconsArr.eng[this.iconsArr.eng.length - 1] : this.iconsArr.hin[this.iconsArr.hin.length - 1],
           id: 0
         },
         {

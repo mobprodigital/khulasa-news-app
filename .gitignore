@@ -23,10 +23,10 @@ www/
 node_modules/
 tmp/
 temp/
-src/assets/
 platforms/
 plugins/
-resources/
+/src/assets/
+/resources/
 plugins/android.json
 plugins/ios.json
 $RECYCLE.BIN/
@@ -34,3 +34,4 @@ $RECYCLE.BIN/
 .DS_Store
 Thumbs.db
 UserInterfaceState.xcuserstate
+src/assets/icon/favicon.png

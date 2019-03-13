@@ -23,8 +23,10 @@ www/
 node_modules/
 tmp/
 temp/
+src/assets/
 platforms/
 plugins/
+resources/
 plugins/android.json
 plugins/ios.json
 $RECYCLE.BIN/

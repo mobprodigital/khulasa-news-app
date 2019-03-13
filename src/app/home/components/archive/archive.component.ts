@@ -46,6 +46,9 @@ export class ArchiveComponent implements OnInit, AfterViewInit {
 
   @ViewChild('postSlider') slider: IonSlides;
 
+  /** sroll timer */
+  private scrollTimer: any;
+
   constructor(
     private postService: PostService,
     private modelCtrl: ModalController,
@@ -222,8 +225,7 @@ export class ArchiveComponent implements OnInit, AfterViewInit {
   }
 
 
-  /** sroll timer */
-  private scrollTimer: any;
+
 
   public async scrollSegmentTo() {
     if (this.scrollTimer) {

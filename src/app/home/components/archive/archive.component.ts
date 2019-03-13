@@ -152,6 +152,7 @@ export class ArchiveComponent implements OnInit, AfterViewInit {
   }
 
 
+
   public async viewPost(p: PostModel) {
     if (p) {
       const model = await this.modelCtrl.create({
@@ -222,7 +223,7 @@ export class ArchiveComponent implements OnInit, AfterViewInit {
 
 
   /** sroll timer */
-  private scrollTimer: any; 
+  private scrollTimer: any;
 
   public async scrollSegmentTo() {
     if (this.scrollTimer) {
@@ -247,6 +248,13 @@ export class ArchiveComponent implements OnInit, AfterViewInit {
     if (category) {
       category.nextPostLoading = true;
       this.getPosts(category.category.categoryId, category.posts.length + 1);
+    }
+  }
+
+  public async onScroll(e: Event, category: CatWisePost) {
+    const target: HTMLElement = <HTMLElement>e.target;
+    if ((target.scrollTop >= (target.scrollHeight - 1000)) && !category.nextPostLoading) {
+      this.loadMore(category);
     }
   }
 

@@ -14,7 +14,8 @@
   </ion-toolbar>
 
 
-  <ion-segment (ionChange)="scrollSegmentTo()" #catSegment [(ngModel)]="activeTabIndex" *ngIf="catPostList && catPostList.length > 0" scrollable>
+  <ion-segment (ionChange)="scrollSegmentTo()" #catSegment [(ngModel)]="activeTabIndex" *ngIf="catPostList && catPostList.length > 0"
+    scrollable>
     <ng-container *ngFor="let menuItem of catPostList; let i = index">
       <ion-segment-button (click)="slideTo(i)" [value]="i">
         {{menuItem.category.categoryName}}
@@ -36,7 +37,7 @@
             <ng-template #postLoaded>
               <div *ngIf="menuSlide.posts && menuSlide.posts.length > 0; else hasError">
 
-                <article class="post-archive-wrap">
+                <article (scroll)="onScroll($event, menuSlide)" class="post-archive-wrap">
                   <app-archive-post *ngFor="let p of menuSlide.posts" [post]="p"></app-archive-post>
                   <div>
                     <div [hidden]="!menuSlide.nextPostLoading" class="post-loader">
@@ -47,8 +48,6 @@
                         {{menuSlide?.errMessage}}
                       </div>
                     </section>
-                    <ion-button [hidden]="menuSlide.nextPostLoading" expand="full" (click)="loadMore(menuSlide)" color="primary">Load
-                      more</ion-button>
                   </div>
                 </article>
               </div>

@@ -19,7 +19,6 @@
       <ion-content>
         <ion-list lines="none">
           <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages">
-            <!-- <ion-item [routerLink]="['/home/archive', p.id]"> -->
             <ion-item (click)="openPage(p)">
               <ion-label class="maneu-label">
                 <span>

@@ -11,39 +11,51 @@ import { AppLanguageEnum } from './interfaces/app-lang.enum';
 import { AppLangService } from './services/choose-lang/choose-lang.service';
 import { RoutedEventEmitterService } from './services/routed-event-emitter/routed-event-emitter.service';
 
+
+interface PageType {
+  title: string;
+  url: string;
+  id: number;
+  icon?: string;
+  color?: string;
+}
+
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html'
 })
 export class AppComponent {
 
-  public iconsArr: string[] = [
-    'home.png',
-    'news.png',
-    'politics.png',
-    'world.png',
-    'business.png',
-    'sports.png',
-    'video.png',
-    'lifestyle.png',
-    'entartain.png',
-    'bazaar_review.png',
-    'language.png',
-  ];
-  public appPages: [{
-    title: string,
-    url: string,
-    id: number
-    icon?: string,
-    color?: string
-  }] = [
-      {
-        title: 'Home',
-        url: '/home',
-        icon: this.iconsArr[0],
-        id: 0
-      }
-    ];
+  public iconsArr: {
+    eng: string[],
+    hin: string[]
+  } = {
+      eng: [
+        'news.png',
+        'politics.png',
+        'world.png',
+        'business.png',
+        'sports.png',
+        'video.png',
+        'lifestyle.png',
+        'entartain.png',
+        'bazaar_review.png',
+        'language.png',
+      ],
+      hin: [
+        'news.png',
+        'politics.png',
+        'world.png',
+        'business.png',
+        'sports.png',
+        'video.png',
+        'lifestyle.png',
+        'entartain.png',
+        'bazaar_review.png',
+        'language.png',
+      ]
+    };
+  public appPages: PageType[] = [];
 
   constructor(
     private modalCtrl: ModalController,
@@ -80,7 +92,7 @@ export class AppComponent {
         message: 'Internet disconnected',
         duration: 2000,
         color: 'danger',
-        position : 'top'
+        position: 'top'
       });
       t.present();
     });
@@ -90,7 +102,7 @@ export class AppComponent {
         message: 'Internet connected',
         duration: 2000,
         color: 'success',
-        position : 'top'
+        position: 'top'
       });
 
       t.present();
@@ -110,13 +122,13 @@ export class AppComponent {
         title: c.categoryName,
         url: 'home',
         id: c.categoryId,
-        icon: this.iconsArr[i + 1]
+        icon: this.iconsArr.eng[i]
       })));
       this.appPages.push(...[
         {
           title: 'Choose language',
           url: 'lang',
-          icon: this.iconsArr[this.iconsArr.length - 1],
+          icon: this.iconsArr.eng[this.iconsArr.eng.length - 1],
           id: 0
         },
         {
@@ -142,7 +154,7 @@ export class AppComponent {
     this.menuCtrl.close('main-menu');
   }
 
-  public openPage(page: any) {
+  public openPage(page: PageType) {
     if (page.url === 'lang') {
       this.chooseLang();
     } else if (page.url === 'about_us' || page.url === 'contact_us') {

@@ -15,10 +15,10 @@
 </ion-header>
 <ion-content padding>
   <div *ngIf="sliderPosts && sliderPosts.length > 0">
-    <ion-slides #postSlider (ionSlidePrevEnd)="onSlidePrev()" (ionSlideNextEnd)="onSlideNext()" [options]="sliderOptions">
+    <ion-slides (ionSlideDidChange)="openLinksInApp()" #postSlider (ionSlidePrevEnd)="onSlidePrev()" (ionSlideNextEnd)="onSlideNext()" [options]="sliderOptions">
       <ion-slide *ngFor="let postSlide of sliderPosts;let slideIndex = index" data-index="slideIndex">
         <section *ngIf="postSlide" class="post-slide-wrap">
-          <div *ngIf="postSlide.post.isVideoPost; else notVideo">
+          <div class="mb-100" *ngIf="postSlide?.post?.isVideoPost; else notVideo">
             <iframe style="width: 100%"  [src]="postSlide.post.videoUrl" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
               allowfullscreen></iframe>
               <br>
@@ -26,7 +26,7 @@
               <br>
           </div>
           <ng-template #notVideo>
-            <div class="single-post" *ngIf="postSlide.post">
+            <div class="single-post mb-100" *ngIf="postSlide.post">
               <header class="post-thumbnail">
                 <img [src]="postSlide.post.thumbnail" class="no-transform" alt="post thumbnail">
               </header>
@@ -52,7 +52,7 @@
                   </ion-row>
                 </ion-grid>
               </div>
-              <div class="post-content" [innerHtml]="postSlide.post.content"></div>
+              <div class="post-content" #singlePostContent [innerHtml]="postSlide.post.content"></div>
             </div>
           </ng-template>
 

@@ -11,7 +11,6 @@ import { AppLanguageEnum } from './interfaces/app-lang.enum';
 import { AppLangService } from './services/choose-lang/choose-lang.service';
 import { RoutedEventEmitterService } from './services/routed-event-emitter/routed-event-emitter.service';
 
-
 interface PageType {
   title: string;
   url: string;
@@ -82,13 +81,15 @@ export class AppComponent {
       this.getMenuCategories();
       if (this.platform.is('cordova')) {
         this.networkErrHandle();
+        this.initFbAnalitics();
       }
     });
-
-
   }
 
-  private networkErrHandle() {
+  private async initFbAnalitics() {
+  }
+
+  private async networkErrHandle() {
     this.network.onDisconnect().subscribe(async () => {
       const t = await this.tost.create({
         message: 'Internet disconnected',

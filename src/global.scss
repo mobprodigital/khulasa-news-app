@@ -17,7 +17,9 @@
     font-weight: normal;
 }
 
-
+.mb-100 {
+    margin-bottom: 100px;
+}
 
 $ff-bhaji : 'bhaji';
 
@@ -66,11 +68,11 @@ $textRed : #d33939;
 }
 
 .alert {
-    font-size: 25px;
+    font-size: 22px;
     padding: 7px;
 
     &.alert-danger {
-        background-color: rgb(255, 131, 131);
+        color: rgb(255, 131, 131);
     }
 }
 
@@ -190,12 +192,17 @@ ion-label.maneu-label>span {
 .single-post {
     text-align: left;
 
+
     .post-title {
         @include posttitle();
     }
 
     .post-content {
         @include meta-data(1rem, #212121);
+
+        a {
+            touch-action: none;
+        }
     }
 
     .post-meta {

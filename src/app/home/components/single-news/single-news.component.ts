@@ -1,8 +1,9 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewChildren, QueryList, ElementRef } from '@angular/core';
 import { PostModel } from 'src/app/models/post.model';
 import { PostService } from 'src/app/services/post/post.service';
 import { NavParams, ModalController, IonSlides, Platform, } from '@ionic/angular';
 import { AdMobFree } from '@ionic-native/admob-free/ngx';
+import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 
 interface SliderPostType {
   post: PostModel;
@@ -21,6 +22,7 @@ export class SingleNewsComponent implements OnInit {
   private postFetchedList: Set<number> = new Set();
   public sliderPosts: SliderPostType[] = [];
   @ViewChild('postSlider') slider: IonSlides;
+  @ViewChildren('singlePostContent') singlePostContentList: QueryList<HTMLDivElement>;
 
 
   public sliderOptions: any = {
@@ -32,6 +34,7 @@ export class SingleNewsComponent implements OnInit {
     private modalCtrl: ModalController,
     private adMob: AdMobFree,
     private platform: Platform,
+    private iab: InAppBrowser
   ) {
     platform.ready().then(() => {
       this.showAd();
@@ -51,19 +54,31 @@ export class SingleNewsComponent implements OnInit {
         relatedPosts: null,
       });
 
+
+
       this.postService.getRelatedPosts(postData.postId).then(rp => {
         this.sliderPosts[0].relatedPosts = rp;
       });
+
+      setTimeout(() => {
+        this.openLinksInApp(0);
+      }, 500);
 
       try {
         const postData1 = await this.getNextPost(postData.postId);
         this.sliderPosts.push(postData1);
         this.postFetchedList.add(postData.postId);
+        setTimeout(() => {
+          this.openLinksInApp(1);
+        }, 500);
 
         const postData2 = await this.getNextPost(postData1.post.postId);
         this.sliderPosts.push(postData2);
-        this.postFetchedList.add(postData1.post.postId);
 
+        this.postFetchedList.add(postData1.post.postId);
+        setTimeout(() => {
+          this.openLinksInApp(2);
+        }, 500);
       } catch (err) {
         console.error(err);
       }
@@ -111,6 +126,7 @@ export class SingleNewsComponent implements OnInit {
         const nextPost = await this.getNextPost(lastPost.post.postId);
         if (nextPost) {
           this.sliderPosts.push(nextPost);
+
         }
       }
     }
@@ -192,6 +208,30 @@ export class SingleNewsComponent implements OnInit {
       this.adMob.interstitial.prepare()
         .then((msg) => console.log('single page ad success', msg))
         .catch(err => console.error('single page ad failed ', err));
+    }
+  }
+
+  public async openLinksInApp(targetSlideIndex: number | undefined) {
+    if (typeof targetSlideIndex === 'undefined') {
+      targetSlideIndex = await this.slider.getActiveIndex();
+    }
+    const activeContent: Array<ElementRef> = this.singlePostContentList['_results'];
+    const element = <HTMLElement>activeContent[targetSlideIndex].nativeElement;
+    if (element.getAttribute('data-ancdisabled') !== 'true') {
+      const anchorArr = element.querySelectorAll('a');
+      console.log(anchorArr);
+      if (anchorArr && anchorArr.length > 0) {
+        for (let i = 0; i < anchorArr.length; i++) {
+          const href = anchorArr[i].href;
+          anchorArr[i].href = '#';
+          anchorArr[i].addEventListener('click', (ev: MouseEvent) => {
+            ev.preventDefault();
+            this.iab.create(href, '_self', { location: 'no' });
+            return false;
+          });
+        }
+      }
+      element.setAttribute('data-ancdisabled', 'true');
     }
   }
 

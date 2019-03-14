@@ -17,7 +17,7 @@
   <ion-segment (ionChange)="scrollSegmentTo()" #catSegment [(ngModel)]="activeTabIndex" *ngIf="catPostList && catPostList.length > 0"
     scrollable>
     <ng-container *ngFor="let menuItem of catPostList; let i = index">
-      <ion-segment-button (click)="slideTo(i)" [value]="i">
+      <ion-segment-button class="cat-tab-btn" (click)="slideTo(i)" [value]="i">
         {{menuItem.category.categoryName}}
       </ion-segment-button>
     </ng-container>

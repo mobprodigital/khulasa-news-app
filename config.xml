@@ -35,5 +35,6 @@
         <variable name="ADMOB_APP_ID" value="ca-app-pub-7769757158085259~4762590879" />
     </plugin>
     <plugin name="cordova-plugin-network-information" spec="2.0.1" />
+    <plugin name="cordova-plugin-inappbrowser" spec="3.0.0" />
     <engine name="android" spec="7.1.4" />
 </widget>

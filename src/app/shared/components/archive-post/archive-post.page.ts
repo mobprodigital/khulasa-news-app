@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { PostModel } from 'src/app/models/post.model';
 import { ModalController } from '@ionic/angular';
 import { SingleNewsComponent } from 'src/app/home/components/single-news/single-news.component';
@@ -10,7 +10,8 @@ import { SingleNewsComponent } from 'src/app/home/components/single-news/single-
 })
 export class ArchivePostPage implements OnInit {
 
-
+  @Output() postViewed = new EventEmitter();
+  @Output() postClosed = new EventEmitter();
   public isVideo = false;
 
   @Input() post: PostModel;
@@ -33,7 +34,12 @@ export class ArchivePostPage implements OnInit {
           post: this.post
         }
       });
-      model.present();
+      model.onDidDismiss().finally(() => {
+        this.postClosed.emit();
+      });
+      model.present().finally(() => {
+        this.postViewed.emit();
+      });
     }
   }
 

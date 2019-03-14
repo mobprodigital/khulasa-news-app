@@ -1,12 +1,17 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { PostService } from 'src/app/services/post/post.service';
 import { PostModel } from 'src/app/models/post.model';
-import { ModalController, MenuController, IonSlides, Platform, IonSegment } from '@ionic/angular';
+import { ModalController, MenuController, IonSlides, Platform, IonSegment, ToastController } from '@ionic/angular';
 import { SingleNewsComponent } from '../single-news/single-news.component';
 import { PostCategoryModel } from 'src/app/models/post-category.model';
 import { SearchComponent } from 'src/app/shared/components/search/search.component';
 import { AdMobFree } from '@ionic-native/admob-free/ngx';
 import { RoutedEventEmitterService } from 'src/app/services/routed-event-emitter/routed-event-emitter.service';
+import { PageType } from 'src/app/interfaces/page.interface';
+import { ChooseLangComponent } from 'src/app/shared/components/choose-lang/choose-lang.component';
+import { AppLanguageEnum } from 'src/app/interfaces/app-lang.enum';
+import { AppLangService } from 'src/app/services/choose-lang/choose-lang.service';
+import { SingalPageComponent } from 'src/app/shared/components/singal-page/singal-page.component';
 
 
 type CatWisePost = {
@@ -49,27 +54,115 @@ export class ArchiveComponent implements OnInit, AfterViewInit {
   /** sroll timer */
   private scrollTimer: any;
 
+  private canAppExit: boolean = true;
+  private backBtnCounter: number = 0;
+  private modalCounter = 0;
+
   constructor(
     private postService: PostService,
     private modelCtrl: ModalController,
     private menuCtrl: MenuController,
     private adMob: AdMobFree,
     private platform: Platform,
-    private routedEvtEmitter: RoutedEventEmitterService
+    private routedEvtEmitter: RoutedEventEmitterService,
+    private toastCtrl: ToastController,
+    private langService: AppLangService,
   ) {
 
-    this.platform.ready().then(() => {
+    this.platform.ready().then(async () => {
       this.showAd();
+      const lang: string = localStorage.getItem('lang_choosen');
+      if (lang !== 'true') {
+        const v = await this.chooseLang();
+        localStorage.setItem('lang_choosen', 'true');
+      }
     });
 
     this.getMenu();
     this.routedEvtEmitter.eventEmitter.subscribe(
-      data => {
-        if (data.data && data.data.catId) {
-          this.setActiveTab(parseInt(data.data.catId, 10));
+      params => {
+        const pageData: PageType = params.data;
+        if (pageData) {
+          if (pageData.url === 'lang') {
+            this.chooseLang();
+          } else if (pageData.url === 'about_us' || pageData.url === 'contact_us' || pageData.url === 'privacy_policy') {
+            this.showPageModal({ pageId: pageData.id, pageTitle: pageData.title });
+          } else {
+            this.setActiveTab(pageData.id);
+          }
         }
+        /* if (data.data && data.data.catId) {
+          this.setActiveTab(parseInt(data.data.catId, 10));
+        } */
       }
     );
+
+    if ('app' in navigator) {
+      this.exitOnbackBtn();
+    }
+
+  }
+
+  private async chooseLang(): Promise<void> {
+
+    const langModal = await this.modelCtrl.create({
+      component: ChooseLangComponent,
+      cssClass: 'lang-modal'
+    });
+
+    langModal.present().catch(err => alert(err)).finally(() => {
+      this.exitAppSetting('preset');
+    });
+    const data = await langModal.onDidDismiss().finally(() => {
+      this.exitAppSetting('reset');
+    });
+
+    const choosedLang: AppLanguageEnum = data['data'];
+    if (choosedLang && choosedLang !== this.langService.selectedLang) {
+      this.langService.selectedLang = choosedLang;
+      window.document.location.reload();
+    }
+
+    return Promise.resolve();
+
+  }
+
+  private async showPageModal(params: object): Promise<void> {
+    const pageModal = await this.modelCtrl.create({
+      component: SingalPageComponent,
+      componentProps: params
+    });
+
+    pageModal.onDidDismiss().finally(() => {
+      this.exitAppSetting('reset');
+    });
+
+    pageModal.present().finally(() => {
+      this.exitAppSetting('preset');
+    });
+  }
+
+  private async exitOnbackBtn() {
+    this.platform.backButton.subscribe(async () => {
+      if (this.canAppExit) {
+        if (this.backBtnCounter === 0) {
+          const toast = await this.toastCtrl.create({
+            message: 'Press back again to exit',
+            closeButtonText: '',
+            position: 'middle',
+            duration: 3000
+          });
+
+          toast.present().finally(() => {
+            this.backBtnCounter++;
+          });
+
+        } else {
+          navigator['app'].exitApp();
+        }
+      }
+
+    });
   }
 
 
@@ -155,17 +248,16 @@ export class ArchiveComponent implements OnInit, AfterViewInit {
   }
 
 
+  public exitAppSetting(action: 'reset' | 'preset') {
 
-  public async viewPost(p: PostModel) {
-    if (p) {
-      const model = await this.modelCtrl.create({
-        component: SingleNewsComponent,
-        componentProps: {
-          post: p
-        }
-      });
-      model.present();
+    if (action === 'reset') {
+      this.modalCounter--;
+    } else {
+      this.modalCounter++;
     }
+
+    this.backBtnCounter = 0;
+    this.canAppExit = (action === 'reset') && (this.modalCounter <= 0);
   }
 
 
@@ -266,7 +358,12 @@ export class ArchiveComponent implements OnInit, AfterViewInit {
       id: 'search-model'
     });
 
-    searchModal.present();
+    searchModal.onDidDismiss().finally(() => {
+      this.exitAppSetting('reset');
+    });
+    searchModal.present().finally(() => {
+      this.exitAppSetting('preset');
+    });
   }
 
 }

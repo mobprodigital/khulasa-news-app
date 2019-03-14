@@ -215,23 +215,29 @@ export class SingleNewsComponent implements OnInit {
     if (typeof targetSlideIndex === 'undefined') {
       targetSlideIndex = await this.slider.getActiveIndex();
     }
-    const activeContent: Array<ElementRef> = this.singlePostContentList['_results'];
-    const element = <HTMLElement>activeContent[targetSlideIndex].nativeElement;
-    if (element.getAttribute('data-ancdisabled') !== 'true') {
-      const anchorArr = element.querySelectorAll('a');
-      console.log(anchorArr);
-      if (anchorArr && anchorArr.length > 0) {
-        for (let i = 0; i < anchorArr.length; i++) {
-          const href = anchorArr[i].href;
-          anchorArr[i].href = '#';
-          anchorArr[i].addEventListener('click', (ev: MouseEvent) => {
-            ev.preventDefault();
-            this.iab.create(href, '_self', { location: 'no' });
-            return false;
-          });
+    try {
+
+
+      const activeContent: Array<ElementRef> = this.singlePostContentList['_results'];
+      const element = <HTMLElement>activeContent[targetSlideIndex].nativeElement;
+      if (element.getAttribute('data-ancdisabled') !== 'true') {
+        const anchorArr = element.querySelectorAll('a');
+        console.log(anchorArr);
+        if (anchorArr && anchorArr.length > 0) {
+          for (let i = 0; i < anchorArr.length; i++) {
+            const href = anchorArr[i].href;
+            anchorArr[i].href = '#';
+            anchorArr[i].addEventListener('click', (ev: MouseEvent) => {
+              ev.preventDefault();
+              this.iab.create(href, '_self', { location: 'no' });
+              return false;
+            });
+          }
         }
+        element.setAttribute('data-ancdisabled', 'true');
       }
-      element.setAttribute('data-ancdisabled', 'true');
+    } catch (err) {
+      console.error(err);
     }
   }
 

@@ -38,7 +38,7 @@
               <div *ngIf="menuSlide.posts && menuSlide.posts.length > 0; else hasError">
 
                 <article (scroll)="onScroll($event, menuSlide)" class="post-archive-wrap">
-                  <app-archive-post *ngFor="let p of menuSlide.posts" [post]="p"></app-archive-post>
+                  <app-archive-post (postClosed)="exitAppSetting('reset')" (postViewed)="exitAppSetting('preset')" *ngFor="let p of menuSlide.posts" [post]="p"></app-archive-post>
                   <div>
                     <div [hidden]="!menuSlide.nextPostLoading" class="post-loader">
                       <ion-spinner></ion-spinner>

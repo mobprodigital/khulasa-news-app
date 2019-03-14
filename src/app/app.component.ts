@@ -58,6 +58,7 @@ export class AppComponent {
     };
   public appPages: PageType[] = [];
 
+
   constructor(
     private modalCtrl: ModalController,
     private platform: Platform,
@@ -85,6 +86,8 @@ export class AppComponent {
       }
     });
   }
+
+ 
 
   private async initFbAnalitics() {
   }
@@ -151,6 +154,13 @@ export class AppComponent {
           id: 71,
           color: '#d33939'
         },
+        {
+          title: 'Privacy Policy',
+          url: 'privacy_policy',
+          icon: '',
+          id: 3,
+          color: '#d33939'
+        },
       ]);
 
     });
@@ -163,7 +173,7 @@ export class AppComponent {
   public openPage(page: PageType) {
     if (page.url === 'lang') {
       this.chooseLang();
-    } else if (page.url === 'about_us' || page.url === 'contact_us') {
+    } else if (page.url === 'about_us' || page.url === 'contact_us' || page.url === 'privacy_policy') {
       this.showPageModal({ pageId: page.id, pageTitle: page.title });
     } else {
       this.routeEvtEmitter.sendMessage({

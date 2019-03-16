@@ -1,8 +1,7 @@
-import { Component, OnInit, ViewChild, ViewChildren, QueryList, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewChildren, QueryList, ElementRef, isDevMode } from '@angular/core';
 import { PostModel } from 'src/app/models/post.model';
 import { PostService } from 'src/app/services/post/post.service';
-import { NavParams, ModalController, IonSlides, Platform, } from '@ionic/angular';
-import { AdMobFree } from '@ionic-native/admob-free/ngx';
+import { NavParams, ModalController, IonSlides } from '@ionic/angular';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 
 interface SliderPostType {
@@ -32,13 +31,9 @@ export class SingleNewsComponent implements OnInit {
     private postService: PostService,
     private navParams: NavParams,
     private modalCtrl: ModalController,
-    private adMob: AdMobFree,
-    private platform: Platform,
     private iab: InAppBrowser
   ) {
-    platform.ready().then(() => {
-      this.showAd();
-    });
+
   }
 
   ngOnInit() {
@@ -196,20 +191,7 @@ export class SingleNewsComponent implements OnInit {
     }
   }
 
-  private async showAd() {
-    return;
-    if (this.platform.is('cordova')) {
-      this.adMob.interstitial.config({
-        id: 'ca-app-pub-7769757158085259/1049155691',
-        autoShow: true,
-        isTesting: true,
-      });
 
-      this.adMob.interstitial.prepare()
-        .then((msg) => console.log('single page ad success', msg))
-        .catch(err => console.error('single page ad failed ', err));
-    }
-  }
 
   public async openLinksInApp(targetSlideIndex: number | undefined) {
     if (typeof targetSlideIndex === 'undefined') {
@@ -218,9 +200,15 @@ export class SingleNewsComponent implements OnInit {
     try {
 
 
-      const activeContent: Array<ElementRef> = this.singlePostContentList['_results'];
+      const activeContent: Array<ElementRef<HTMLElement>> = this.singlePostContentList['_results'];
+      if (!activeContent || activeContent.length === 0) {
+        return;
+      }
+      if (!activeContent[targetSlideIndex]) {
+        return;
+      }
       const element = <HTMLElement>activeContent[targetSlideIndex].nativeElement;
-      if (element.getAttribute('data-ancdisabled') !== 'true') {
+      if (element && element.getAttribute('data-ancdisabled') !== 'true') {
         const anchorArr = element.querySelectorAll('a');
         console.log(anchorArr);
         if (anchorArr && anchorArr.length > 0) {
@@ -237,7 +225,7 @@ export class SingleNewsComponent implements OnInit {
         element.setAttribute('data-ancdisabled', 'true');
       }
     } catch (err) {
-      console.error(err);
+      console.log(err);
     }
   }
 

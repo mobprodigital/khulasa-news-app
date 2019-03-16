@@ -22,7 +22,6 @@
     "@angular/router": "^7.2.2",
     "@ionic-native/admob-free": "^5.2.0",
     "@ionic-native/core": "^5.0.0",
-    "@ionic-native/firebase-analytics": "^5.2.0",
     "@ionic-native/in-app-browser": "^5.2.0",
     "@ionic-native/network": "^5.2.0",
     "@ionic-native/social-sharing": "^5.0.0",

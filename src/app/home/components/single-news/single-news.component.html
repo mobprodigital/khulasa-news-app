@@ -19,7 +19,7 @@
       <ion-slide *ngFor="let postSlide of sliderPosts;let slideIndex = index" data-index="slideIndex">
         <section *ngIf="postSlide" class="post-slide-wrap">
           <div class="mb-100" *ngIf="postSlide?.post?.isVideoPost; else notVideo">
-            <iframe style="width: 100%"  [src]="postSlide.post.videoUrl" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+            <iframe style="width: 100%"  [src]="postSlide.post.videoUrl" frameborder="0" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
               allowfullscreen></iframe>
               <br>
               <br>

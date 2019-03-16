@@ -2,7 +2,6 @@ import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { PostService } from 'src/app/services/post/post.service';
 import { PostModel } from 'src/app/models/post.model';
 import { ModalController, MenuController, IonSlides, Platform, IonSegment, ToastController } from '@ionic/angular';
-import { SingleNewsComponent } from '../single-news/single-news.component';
 import { PostCategoryModel } from 'src/app/models/post-category.model';
 import { SearchComponent } from 'src/app/shared/components/search/search.component';
 import { AdMobFree } from '@ionic-native/admob-free/ngx';
@@ -54,8 +53,8 @@ export class ArchiveComponent implements OnInit, AfterViewInit {
   /** sroll timer */
   private scrollTimer: any;
 
-  private canAppExit: boolean = true;
-  private backBtnCounter: number = 0;
+  private canAppExit = true;
+  private backBtnCounter = 0;
   private modalCounter = 0;
 
   constructor(
@@ -91,9 +90,6 @@ export class ArchiveComponent implements OnInit, AfterViewInit {
             this.setActiveTab(pageData.id);
           }
         }
-        /* if (data.data && data.data.catId) {
-          this.setActiveTab(parseInt(data.data.catId, 10));
-        } */
       }
     );
 
@@ -110,7 +106,7 @@ export class ArchiveComponent implements OnInit, AfterViewInit {
       cssClass: 'lang-modal'
     });
 
-    langModal.present().catch(err => alert(err)).finally(() => {
+    langModal.present().catch(err => console.log('err : ', err)).finally(() => {
       this.exitAppSetting('preset');
     });
     const data = await langModal.onDidDismiss().finally(() => {
@@ -173,7 +169,7 @@ export class ArchiveComponent implements OnInit, AfterViewInit {
       this.adMob.banner.config({
         id: 'ca-app-pub-7769757158085259/7251294473',
         autoShow: true,
-        isTesting: true,
+        isTesting: false,
       });
 
       this.adMob.banner.prepare()
@@ -249,13 +245,7 @@ export class ArchiveComponent implements OnInit, AfterViewInit {
 
 
   public exitAppSetting(action: 'reset' | 'preset') {
-
-    if (action === 'reset') {
-      this.modalCounter--;
-    } else {
-      this.modalCounter++;
-    }
-
+    this.modalCounter = (action === 'preset') ? ++this.modalCounter : --this.modalCounter;
     this.backBtnCounter = 0;
     this.canAppExit = (action === 'reset') && (this.modalCounter <= 0);
   }
@@ -271,7 +261,7 @@ export class ArchiveComponent implements OnInit, AfterViewInit {
   }
 
 
-  public async onSlideNext(e: any) {
+  public async onSlideNext(_e: any) {
     const activeIndex = await this.slider.getActiveIndex();
     const slidesCount = await this.slider.length();
     const targetIndex = this.getSlideIndex(activeIndex, 2, slidesCount);

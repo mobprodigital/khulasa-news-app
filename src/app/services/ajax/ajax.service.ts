@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, isDevMode } from '@angular/core';
 import { HttpParams, HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { AppLangService } from '../choose-lang/choose-lang.service';
 import { AppLanguageEnum } from 'src/app/interfaces/app-lang.enum';
@@ -25,7 +25,7 @@ export class AjaxService {
     private appLangService: AppLangService,
     private network: Network,
   ) {
-    if (appLangService.selectedLang === AppLanguageEnum.English) {
+    if (this.appLangService.selectedLang === AppLanguageEnum.English) {
       this.activeBaseUrl = this.baseUrl.english;
     } else {
       this.activeBaseUrl = this.baseUrl.hindi;
@@ -36,7 +36,6 @@ export class AjaxService {
   public get(params: HttpParams): Promise<any> {
 
     return new Promise((resolve, reject) => {
-
       if (this.network.type === 'none') {
         reject('Please connect to internet');
       } else {
@@ -51,7 +50,8 @@ export class AjaxService {
             }
           }),
           (err: HttpErrorResponse) => {
-            reject(err.message);
+            // reject(err.message);
+            reject('something went wrong. Please try again later.');
           },
         );
       }

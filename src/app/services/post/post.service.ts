@@ -153,7 +153,7 @@ export class PostService {
       tempDiv.innerHTML = iframeString;
       const ytIframe: HTMLIFrameElement = tempDiv.querySelector('iframe');
       if (ytIframe) {
-        return this.domSanitizer.bypassSecurityTrustResourceUrl(ytIframe.src);
+        return this.domSanitizer.bypassSecurityTrustResourceUrl(ytIframe.src + '?autoplay=0&rel=0');
       } else {
         return null;
       }

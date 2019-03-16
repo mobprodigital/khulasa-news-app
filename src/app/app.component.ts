@@ -70,15 +70,10 @@ export class AppComponent {
       this.getMenuCategories();
       if (this.platform.is('cordova')) {
         this.networkErrHandle();
-        this.initFbAnalitics();
       }
     });
   }
 
-
-
-  private async initFbAnalitics() {
-  }
 
   private async networkErrHandle() {
     this.network.onDisconnect().subscribe(async () => {

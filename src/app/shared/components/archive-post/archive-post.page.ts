@@ -37,8 +37,10 @@ export class ArchivePostPage implements OnInit {
       model.onDidDismiss().finally(() => {
         this.postClosed.emit();
       });
-      model.present().finally(() => {
+      model.present().then(p => {
         this.postViewed.emit();
+      }).catch(err => {
+        console.log('error : ', err);
       });
     }
   }

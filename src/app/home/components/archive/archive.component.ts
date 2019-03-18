@@ -145,7 +145,7 @@ export class ArchiveComponent implements OnInit, AfterViewInit {
           const toast = await this.toastCtrl.create({
             message: 'Press back again to exit',
             closeButtonText: '',
-            position: 'middle',
+            position: 'bottom',
             duration: 3000
           });
 
@@ -164,18 +164,14 @@ export class ArchiveComponent implements OnInit, AfterViewInit {
 
   private async showAd() {
     if (this.platform.is('cordova')) {
-
-
       this.adMob.banner.config({
         id: 'ca-app-pub-7769757158085259/7251294473',
         autoShow: true,
-        isTesting: false,
+        isTesting: true,
       });
-
       this.adMob.banner.prepare()
         .then((msg) => console.log('archive page ad success', msg))
         .catch(err => console.error('archive page ad failed ', err));
-
     }
   }
 

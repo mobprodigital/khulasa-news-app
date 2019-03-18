@@ -1,11 +1,12 @@
 import { NgModule } from '@angular/core';
-import { IonicModule} from '@ionic/angular';
+import { IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { ChooseLangComponent } from './components/choose-lang/choose-lang.component';
 import { SearchComponent } from './components/search/search.component';
 import { FormsModule } from '@angular/forms';
 import { ArchivePostPage } from './components/archive-post/archive-post.page';
 import { SingalPageComponent } from './components/singal-page/singal-page.component';
+import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 
 @NgModule({
   entryComponents: [
@@ -28,6 +29,7 @@ import { SingalPageComponent } from './components/singal-page/singal-page.compon
     ChooseLangComponent,
     SearchComponent,
     ArchivePostPage
-  ]
+  ],
+  providers: [InAppBrowser]
 })
 export class SharedModule { }

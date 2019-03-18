@@ -197,9 +197,8 @@ export class SingleNewsComponent implements OnInit {
     if (typeof targetSlideIndex === 'undefined') {
       targetSlideIndex = await this.slider.getActiveIndex();
     }
+
     try {
-
-
       const activeContent: Array<ElementRef<HTMLElement>> = this.singlePostContentList['_results'];
       if (!activeContent || activeContent.length === 0) {
         return;
@@ -210,7 +209,6 @@ export class SingleNewsComponent implements OnInit {
       const element = <HTMLElement>activeContent[targetSlideIndex].nativeElement;
       if (element && element.getAttribute('data-ancdisabled') !== 'true') {
         const anchorArr = element.querySelectorAll('a');
-        console.log(anchorArr);
         if (anchorArr && anchorArr.length > 0) {
           for (let i = 0; i < anchorArr.length; i++) {
             const href = anchorArr[i].href;

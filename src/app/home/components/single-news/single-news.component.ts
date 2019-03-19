@@ -3,6 +3,7 @@ import { PostModel } from 'src/app/models/post.model';
 import { PostService } from 'src/app/services/post/post.service';
 import { NavParams, ModalController, IonSlides } from '@ionic/angular';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
+import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 
 interface SliderPostType {
   post: PostModel;
@@ -31,7 +32,8 @@ export class SingleNewsComponent implements OnInit {
     private postService: PostService,
     private navParams: NavParams,
     private modalCtrl: ModalController,
-    private iab: InAppBrowser
+    private iab: InAppBrowser,
+    private share: SocialSharing,
   ) {
 
   }
@@ -87,18 +89,18 @@ export class SingleNewsComponent implements OnInit {
 
   public async sharePost() {
 
-    if ('share' in navigator) {
-      const postIndex = await this.slider.getActiveIndex();
-      const post = this.sliderPosts[postIndex].post;
+    const postIndex = await this.slider.getActiveIndex();
+    const post = this.sliderPosts[postIndex].post;
+    const shareOptions = {
+      message: post.content.substr(0, 100),
+      chooserTitle: 'Share title',
+      subject: post.title,
+      url: post.portalUrl,
+    };
+    this.share.shareWithOptions(shareOptions).catch(err => {
+      console.log('err in sharing : ', err);
+    });
 
-      window.navigator['share']({
-        title: post.title,
-        text: post.content.substr(0, 100),
-        url: post.portalUrl
-      }).catch(err => { });
-    } else {
-      alert('share api is not supported in your device');
-    }
   }
 
   public async onSlideNext() {
@@ -212,10 +214,11 @@ export class SingleNewsComponent implements OnInit {
         if (anchorArr && anchorArr.length > 0) {
           for (let i = 0; i < anchorArr.length; i++) {
             const href = anchorArr[i].href;
-            anchorArr[i].href = '#';
+            anchorArr[i].removeAttribute('href');
             anchorArr[i].addEventListener('click', (ev: MouseEvent) => {
               ev.preventDefault();
               this.iab.create(href, '_self', { location: 'no' });
+              // window.open(href, '_self', 'location=no');
               return false;
             });
           }

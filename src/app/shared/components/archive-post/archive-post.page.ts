@@ -2,6 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { PostModel } from 'src/app/models/post.model';
 import { ModalController } from '@ionic/angular';
 import { SingleNewsComponent } from 'src/app/home/components/single-news/single-news.component';
+import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 
 @Component({
   selector: 'app-archive-post',
@@ -17,7 +18,8 @@ export class ArchivePostPage implements OnInit {
   @Input() post: PostModel;
 
   constructor(
-    private modelCtrl: ModalController
+    private modelCtrl: ModalController,
+    private share: SocialSharing
   ) { }
 
   ngOnInit() {
@@ -49,17 +51,19 @@ export class ArchivePostPage implements OnInit {
   public sharePost(ev: MouseEvent) {
     ev.stopPropagation();
     ev.preventDefault();
-    if ('share' in navigator) {
-      window.navigator['share']({
-        title: this.post.title,
-        text: this.post.content.substr(0, 100),
-        url: this.post.portalUrl
-      }).catch(err => {
 
+
+    const shareOptions = {
+      message: this.post.content.substr(0, 100),
+      chooserTitle: 'Share news via',
+      subject: this.post.title,
+      url: this.post.portalUrl,
+    };
+
+    this.share.shareWithOptions(shareOptions)
+      .catch(err => {
+        console.log('err in sharing : ', err);
       });
-    } else {
-      alert('share api is not supported in your device');
-    }
   }
 
 }

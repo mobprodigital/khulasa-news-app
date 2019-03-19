@@ -1,0 +1,18 @@
+{
+    "android": {
+        "debug": {
+            "keystore": "D:/AppSignCertificate/AppSignCertificate/SignCertificate.jks",
+            "storePassword": "mojo@digi123",
+            "alias": "jmm",
+            "password": "mojo@digi123",
+            "keystoreType": ""
+        },
+        "release": {
+            "keystore": "D:/AppSignCertificate/AppSignCertificate/SignCertificate.jks",
+            "storePassword": "mojo@digi123",
+            "alias": "jmm",
+            "password": "mojo@digi123",
+            "keystoreType": ""
+        }
+    }
+}

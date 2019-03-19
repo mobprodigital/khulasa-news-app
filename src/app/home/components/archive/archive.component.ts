@@ -167,7 +167,7 @@ export class ArchiveComponent implements OnInit, AfterViewInit {
       this.adMob.banner.config({
         id: 'ca-app-pub-7769757158085259/7251294473',
         autoShow: true,
-        isTesting: true,
+        isTesting: false,
       });
       this.adMob.banner.prepare()
         .then((msg) => console.log('archive page ad success', msg))

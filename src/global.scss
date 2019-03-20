@@ -168,6 +168,7 @@ ion-label.maneu-label>span {
 
         .post-title {
             @include posttitle();
+            user-select: text;
         }
 
         .post-meta {

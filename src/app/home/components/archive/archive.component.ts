@@ -11,6 +11,7 @@ import { ChooseLangComponent } from 'src/app/shared/components/choose-lang/choos
 import { AppLanguageEnum } from 'src/app/interfaces/app-lang.enum';
 import { AppLangService } from 'src/app/services/choose-lang/choose-lang.service';
 import { SingalPageComponent } from 'src/app/shared/components/singal-page/singal-page.component';
+import { AppVersion } from '@ionic-native/app-version/ngx';
 
 
 type CatWisePost = {

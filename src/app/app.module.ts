@@ -13,6 +13,7 @@ import { SharedModule } from './shared/shared.module';
 import { AdMobFree } from '@ionic-native/admob-free/ngx';
 import { RoutedEventEmitterService } from './services/routed-event-emitter/routed-event-emitter.service';
 import { Network } from '@ionic-native/network/ngx';
+import { AppVersion } from '@ionic-native/app-version/ngx';
 
 
 @NgModule({
@@ -28,6 +29,7 @@ import { Network } from '@ionic-native/network/ngx';
   providers: [
     StatusBar,
     SplashScreen,
+    AppVersion,
     ToastController,
     AdMobFree,
     Network,

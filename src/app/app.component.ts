@@ -8,12 +8,15 @@ import { AppLanguageEnum } from './interfaces/app-lang.enum';
 import { AppLangService } from './services/choose-lang/choose-lang.service';
 import { RoutedEventEmitterService } from './services/routed-event-emitter/routed-event-emitter.service';
 import { PageType } from './interfaces/page.interface';
+import { AppVersion } from '@ionic-native/app-version/ngx';
 
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html'
 })
 export class AppComponent {
+
+  public appVersionNumber: string = '0.0.1';
 
   public iconsArr: {
     eng: string[],
@@ -59,17 +62,19 @@ export class AppComponent {
     private routeEvtEmitter: RoutedEventEmitterService,
     private network: Network,
     private tost: ToastController,
+    private appVersion: AppVersion,
   ) {
     this.initializeApp();
   }
 
   initializeApp() {
-    this.platform.ready().then(() => {
+    this.platform.ready().then(async () => {
       this.statusBar.show();
       this.splashScreen.hide();
       this.getMenuCategories();
       if (this.platform.is('cordova')) {
         this.networkErrHandle();
+        this.appVersionNumber = await this.appVersion.getVersionNumber();
       }
     });
   }

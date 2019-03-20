@@ -11,6 +11,7 @@
 @import '~@ionic/angular/css/flex-utils.css';
 
 
+
 @font-face {
     font-family: 'bhaji';
     src: url('assets/fonts/bahij_sultannahia/Bahij_SultanNahia-Regular.ttf')format('truetype');
@@ -193,10 +194,12 @@ ion-label.maneu-label>span {
 
     .post-title {
         @include posttitle();
+        user-select: text;
     }
 
     .post-content {
         @include meta-data(1rem, #212121);
+        user-select: text;
 
         a {
             touch-action: manipulation;

@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { PostService } from 'src/app/services/post/post.service';
 import { PostModel } from 'src/app/models/post.model';
-import { ModalController, MenuController, IonSlides, Platform, IonSegment, ToastController } from '@ionic/angular';
+import { ModalController, MenuController, IonSlides, Platform, IonSegment, ToastController, AlertController } from '@ionic/angular';
 import { PostCategoryModel } from 'src/app/models/post-category.model';
 import { SearchComponent } from 'src/app/shared/components/search/search.component';
 import { AdMobFree } from '@ionic-native/admob-free/ngx';
@@ -11,8 +11,12 @@ import { ChooseLangComponent } from 'src/app/shared/components/choose-lang/choos
 import { AppLanguageEnum } from 'src/app/interfaces/app-lang.enum';
 import { AppLangService } from 'src/app/services/choose-lang/choose-lang.service';
 import { SingalPageComponent } from 'src/app/shared/components/singal-page/singal-page.component';
+import { Market } from '@ionic-native/market/ngx';
 import { AppVersion } from '@ionic-native/app-version/ngx';
-
+import { FcmService } from 'src/app/services/fcm/fcm.service';
+import { AjaxService } from 'src/app/services/ajax/ajax.service';
+import { SingleNewsComponent } from '../single-news/single-news.component';
+import { Device } from '@ionic-native/device/ngx';
 
 type CatWisePost = {
   /**
@@ -67,6 +71,13 @@ export class ArchiveComponent implements OnInit, AfterViewInit {
     private routedEvtEmitter: RoutedEventEmitterService,
     private toastCtrl: ToastController,
     private langService: AppLangService,
+    private alertCtrl: AlertController,
+    private market: Market,
+    private tost: ToastController,
+    private appVersion: AppVersion,
+    private fcm: FcmService,
+    private device: Device,
+    private ajax: AjaxService,
   ) {
 
     this.platform.ready().then(async () => {
@@ -76,6 +87,11 @@ export class ArchiveComponent implements OnInit, AfterViewInit {
         const v = await this.chooseLang();
         localStorage.setItem('lang_choosen', 'true');
       }
+
+      if (this.platform.is('android')) {
+        // this.notificationSetup();
+      }
+
     });
 
     this.getMenu();
@@ -140,7 +156,8 @@ export class ArchiveComponent implements OnInit, AfterViewInit {
   }
 
   private async exitOnbackBtn() {
-    this.platform.backButton.subscribe(async () => {
+
+    this.platform.backButton.subscribeWithPriority(1, async () => {
       if (this.canAppExit) {
         if (this.backBtnCounter === 0) {
           const toast = await this.toastCtrl.create({
@@ -171,7 +188,9 @@ export class ArchiveComponent implements OnInit, AfterViewInit {
         isTesting: false,
       });
       this.adMob.banner.prepare()
-        .then((msg) => console.log('archive page ad success', msg))
+        .then((msg) => {
+          this.adMob.banner.show();
+        })
         .catch(err => console.error('archive page ad failed ', err));
     }
   }
@@ -311,13 +330,33 @@ export class ArchiveComponent implements OnInit, AfterViewInit {
       window.clearTimeout(this.scrollTimer);
     }
     this.scrollTimer = setTimeout(() => {
-      const ele = this.catSegment['el'];
-      const activeTab: HTMLElement = ele.querySelector('.segment-button-checked');
-      const scrollCount = (activeTab.offsetLeft + (activeTab.clientWidth / 2)) - (ele.clientWidth / 2);
-      ele.scrollTo({
-        behavior: 'smooth',
-        left: scrollCount
-      });
+      try {
+
+        const ele = this.catSegment['el'];
+        if (ele) {
+          const activeTab: HTMLElement = ele.querySelector('.segment-button-checked');
+          const scrollCount = (activeTab.offsetLeft + (activeTab.clientWidth / 2)) - (ele.clientWidth / 2);
+          if (!ele['scrollTo']) {
+            throw new Error('Webview outdated');
+          }
+          ele.scrollTo({
+            behavior: 'smooth',
+            left: scrollCount
+          });
+        }
+      } catch (err) {
+        this.alertCtrl.create({
+          message: 'Looks like you are using older version of webview. Please go to play store and update your Android System WebView',
+          buttons: [{
+            text: 'Open play store',
+            handler: () => {
+              this.market.open('com.google.android.webview').catch(err => {
+                alert('Unable to search for Android System WebView. Go to playstore and update yourself');
+              });
+            }
+          }]
+        })
+      }
     }, 100);
 
   }
@@ -352,5 +391,80 @@ export class ArchiveComponent implements OnInit, AfterViewInit {
       this.exitAppSetting('preset');
     });
   }
+
+
+  private notificationSetup() {
+    this.fcm.getToken();
+    this.fcm.onTockenRefresh().subscribe(
+      async token => {
+        console.log('token changed : ', token);
+        const appVer = await this.appVersion.getVersionNumber();
+        const dataToSend = {
+          'deviceId': this.device.uuid,
+          'deviceName': this.device.model,
+          'appVer': appVer,
+          'fcmToken': token
+        };
+        this.ajax.post(dataToSend, 'http://development.bdigimedia.com/riccha_dev/khulasa-News/pushNotifications/setFcmToken.php'
+        ).catch(err => {
+
+        });
+      },
+      err => {
+        console.log('notification error : ', err);
+      }
+    );
+    this.fcm.onNotifications().subscribe(
+      notification => {
+        console.log('notification success : ', notification);
+        if (this.platform.is('ios')) {
+          this.presentToast(notification.aps.alert);
+        } else {
+          if (notification && notification.tap) {
+            const postSlug: string = notification.url;
+            if (postSlug) {
+              this.postService.getPost(postSlug).then(post => {
+                if (post) {
+                  this.viewPost(post);
+                }
+              });
+            }
+          } else {
+            this.presentToast(notification);
+          }
+        }
+      },
+      err => {
+        console.log('notification err : ', err);
+      }
+    );
+  }
+
+  private async presentToast(message) {
+    const toast = await this.tost.create({
+      message: message.body,
+      duration: 3000,
+    });
+    toast.present();
+  }
+
+  private async viewPost(post: PostModel) {
+
+    const model = await this.modelCtrl.create({
+      component: SingleNewsComponent,
+      componentProps: {
+        post: post
+      }
+    });
+    /* model.onDidDismiss().finally(() => {
+      this.postClosed.emit();
+    });
+    model.present().then(p => {
+      this.postViewed.emit();
+    }).catch(err => {
+      console.log('error : ', err);
+    }); */
+  }
+
 
 }

@@ -23,20 +23,26 @@
     "@ionic-native/admob-free": "^5.2.0",
     "@ionic-native/app-version": "^5.3.0",
     "@ionic-native/core": "^5.1.0",
+    "@ionic-native/device": "^5.3.0",
+    "@ionic-native/firebase": "^5.3.0",
     "@ionic-native/in-app-browser": "^5.2.0",
+    "@ionic-native/market": "^5.3.0",
     "@ionic-native/network": "^5.2.0",
     "@ionic-native/social-sharing": "^5.2.0",
     "@ionic-native/splash-screen": "^5.0.0",
     "@ionic-native/status-bar": "^5.0.0",
     "@ionic/angular": "^4.0.0",
+    "angularfire2": "^5.1.2",
     "cordova-admob-sdk": "^0.22.0",
-    "cordova-android": "7.1.4",
+    "cordova-android": "8.0.0",
     "cordova-plugin-admob-free": "^0.25.0",
     "cordova-plugin-app-version": "0.1.9",
     "cordova-plugin-device": "^2.0.2",
+    "cordova-plugin-firebase": "2.0.5",
     "cordova-plugin-inappbrowser": "^3.0.0",
     "cordova-plugin-ionic-keyboard": "^2.1.3",
     "cordova-plugin-ionic-webview": "^3.1.2",
+    "cordova-plugin-market": "1.2.0",
     "cordova-plugin-network-information": "^2.0.1",
     "cordova-plugin-statusbar": "^2.4.2",
     "cordova-plugin-whitelist": "^1.3.3",
@@ -46,12 +52,13 @@
     "cordova-support-google-services": "1.3.1",
     "core-js": "^2.5.4",
     "es6-promise-plugin": "^4.2.2",
+    "firebase": "^5.9.1",
     "rxjs": "~6.3.3",
     "zone.js": "~0.8.29"
   },
   "devDependencies": {
     "@angular-devkit/architect": "~0.12.3",
-    "@angular-devkit/build-angular": "~0.12.3",
+    "@angular-devkit/build-angular": "^0.13.7",
     "@angular-devkit/core": "~7.2.3",
     "@angular-devkit/schematics": "~7.2.3",
     "@angular/cli": "~7.2.3",
@@ -93,7 +100,9 @@
       "cordova-plugin-x-socialsharing": {
         "ANDROID_SUPPORT_V4_VERSION": "24.1.1+"
       },
-      "cordova-plugin-app-version": {}
+      "cordova-plugin-app-version": {},
+      "cordova-plugin-firebase": {},
+      "cordova-plugin-market": {}
     },
     "platforms": [
       "android"

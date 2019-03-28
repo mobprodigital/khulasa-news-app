@@ -51,13 +51,21 @@ export class PostService {
     });
   }
 
-  public getPost(postId: number): Promise<PostModel> {
+  public getPost(postId: number): Promise<PostModel>;
+  public getPost(postSlug: string): Promise<PostModel>;
+  public getPost(postIdOrSlug: number | string): Promise<PostModel> {
     return new Promise((res, rej) => {
-      this.http.get(
-        new HttpParams()
-          .set('action', 'get_single_post_by_id')
-          .set('postId', postId.toString())
-      )
+      let _httpParams: HttpParams = new HttpParams()
+        .set('action', 'get_single_post_by_id');
+      if (typeof postIdOrSlug === 'string') {
+        _httpParams = _httpParams.set('postSlug', postIdOrSlug);
+      } else if (typeof postIdOrSlug === 'number') {
+        _httpParams = _httpParams.set('postId', postIdOrSlug.toString());
+      } else {
+        rej('Argument type mismatch');
+      }
+
+      this.http.get(_httpParams)
         .then(resp => {
           const singlePost = this.parsePosts([resp]);
           res(singlePost[0]);

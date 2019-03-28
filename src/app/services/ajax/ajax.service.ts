@@ -57,5 +57,29 @@ export class AjaxService {
       }
     });
   }
+  public post(params: any, baseUrl?: string): Promise<any> {
+
+    return new Promise((resolve, reject) => {
+      if (this.network.type === 'none') {
+        reject('Please connect to internet');
+      } else {
+        this.http.post(baseUrl, JSON.stringify(params)).subscribe(
+          ((resp: any) => {
+            console.log('fcm success ', resp);
+            if (resp.status === 200) {
+              resolve(resp.data);
+            } else {
+              reject(resp.message);
+            }
+          }),
+          (err: HttpErrorResponse) => {
+            console.log('fcm err ', err);
+            // reject(err.message);
+            reject('something went wrong. Please try again later.');
+          },
+        );
+      }
+    });
+  }
 
 }

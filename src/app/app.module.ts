@@ -15,19 +15,9 @@ import { RoutedEventEmitterService } from './services/routed-event-emitter/route
 import { Network } from '@ionic-native/network/ngx';
 import { AppVersion } from '@ionic-native/app-version/ngx';
 
-import { AngularFireModule } from 'angularfire2';
-import { AngularFirestoreModule } from 'angularfire2/firestore';
-import { Firebase } from '@ionic-native/firebase/ngx';
 import { Device } from '@ionic-native/device/ngx';
 import { Market } from '@ionic-native/market/ngx';
-const config = {
-  apiKey: 'AIzaSyB7sG23PibLsD-aa6vGO6lWX7rwLoB4e6w',
-  authDomain: 'khulasanews-2d406.firebaseapp.com',
-  databaseURL: 'https://khulasanews-2d406.firebaseio.com',
-  projectId: 'khulasanews-2d406',
-  storageBucket: 'khulasanews-2d406.appspot.com',
-  messagingSenderId: '382652766340'
-};
+
 
 @NgModule({
   declarations: [AppComponent],
@@ -38,8 +28,7 @@ const config = {
     SharedModule,
     IonicModule.forRoot(),
     AppRoutingModule,
-    AngularFireModule.initializeApp(config),
-    AngularFirestoreModule
+    
   ],
   providers: [
     StatusBar,
@@ -47,7 +36,6 @@ const config = {
     AppVersion,
     ToastController,
     AdMobFree,
-    Firebase,
     Network,
     Device,
     Market,

@@ -10,12 +10,6 @@ import { RoutedEventEmitterService } from './services/routed-event-emitter/route
 import { PageType } from './interfaces/page.interface';
 import { AppVersion } from '@ionic-native/app-version/ngx';
 
-import { FcmService } from './services/fcm/fcm.service';
-import { Device } from '@ionic-native/device/ngx';
-import { AjaxService } from './services/ajax/ajax.service';
-import { PostModel } from './models/post.model';
-import { SingleNewsComponent } from './home/components/single-news/single-news.component';
-
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html'
@@ -69,10 +63,6 @@ export class AppComponent {
     private network: Network,
     private tost: ToastController,
     private appVersion: AppVersion,
-    private fcm: FcmService,
-    private device: Device,
-    private ajax: AjaxService,
-    private modelCtrl: ModalController,
   ) {
     this.initializeApp();
   }
@@ -87,85 +77,9 @@ export class AppComponent {
         this.appVersion.getVersionCode().then(versionCode => {
           this.appVersionNumber = versionCode.toString();
         });
-        // this.notificationSetup();
       }
     });
   }
-
-
-  /* private async presentToast(message) {
-    const toast = await this.tost.create({
-      message: message.body,
-      duration: 3000,
-    });
-    toast.present();
-  }
- */
-  /*  private async viewPost(post: PostModel) {
- 
-     const model = await this.modelCtrl.create({
-       component: SingleNewsComponent,
-       componentProps: {
-         post: post
-       }
-     });
-     //  model.onDidDismiss().finally(() => {
-     //   this.postClosed.emit();
-     // });
-     // model.present().then(p => {
-     //   this.postViewed.emit();
-     // }).catch(err => {
-     //   console.log('error : ', err);
-     // }); 
-   } */
-
-
-  /* private notificationSetup() {
-    this.fcm.getToken();
-    this.fcm.onTockenRefresh().subscribe(
-      async token => {
-        console.log('token changed : ', token);
-        const appVer = await this.appVersion.getVersionNumber();
-        const dataToSend = {
-          'deviceId': this.device.uuid,
-          'deviceName': this.device.model,
-          'appVer': appVer,
-          'fcmToken': token
-        };
-        this.ajax.post(dataToSend, 'http://development.bdigimedia.com/riccha_dev/khulasa-News/pushNotifications/setFcmToken.php'
-        ).catch(err => {
-
-        });
-      },
-      err => {
-        console.log('notification error : ', err);
-      }
-    );
-    this.fcm.onNotifications().subscribe(
-      notification => {
-        console.log('notification success : ', notification);
-        if (this.platform.is('ios')) {
-          this.presentToast(notification.aps.alert);
-        } else {
-          if (notification && notification.tap) {
-            const postSlug: string = notification.url;
-            if (postSlug) {
-              this.postService.getPost(postSlug).then(post => {
-                if (post) {
-                  this.viewPost(post);
-                }
-              });
-            }
-          } else {
-            this.presentToast(notification);
-          }
-        }
-      },
-      err => {
-        console.log('notification err : ', err);
-      }
-    );
-  } */
 
   private async networkErrHandle() {
     this.network.onDisconnect().subscribe(async () => {

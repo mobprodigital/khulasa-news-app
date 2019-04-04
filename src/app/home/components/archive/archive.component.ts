@@ -11,12 +11,6 @@ import { ChooseLangComponent } from 'src/app/shared/components/choose-lang/choos
 import { AppLanguageEnum } from 'src/app/interfaces/app-lang.enum';
 import { AppLangService } from 'src/app/services/choose-lang/choose-lang.service';
 import { SingalPageComponent } from 'src/app/shared/components/singal-page/singal-page.component';
-import { Market } from '@ionic-native/market/ngx';
-import { AppVersion } from '@ionic-native/app-version/ngx';
-import { FcmService } from 'src/app/services/fcm/fcm.service';
-import { AjaxService } from 'src/app/services/ajax/ajax.service';
-import { SingleNewsComponent } from '../single-news/single-news.component';
-import { Device } from '@ionic-native/device/ngx';
 
 type CatWisePost = {
   /**
@@ -72,24 +66,14 @@ export class ArchiveComponent implements OnInit, AfterViewInit {
     private toastCtrl: ToastController,
     private langService: AppLangService,
     private alertCtrl: AlertController,
-    private market: Market,
     private tost: ToastController,
-    private appVersion: AppVersion,
-    private fcm: FcmService,
-    private device: Device,
-    private ajax: AjaxService,
   ) {
 
     this.platform.ready().then(async () => {
       this.showAd();
       const lang: string = localStorage.getItem('lang_choosen');
       if (lang !== 'true') {
-        const v = await this.chooseLang();
         localStorage.setItem('lang_choosen', 'true');
-      }
-
-      if (this.platform.is('android')) {
-        // this.notificationSetup();
       }
 
     });
@@ -188,7 +172,7 @@ export class ArchiveComponent implements OnInit, AfterViewInit {
         isTesting: false,
       });
       this.adMob.banner.prepare()
-        .then((msg) => {
+        .then(() => {
           this.adMob.banner.show();
         })
         .catch(err => console.error('archive page ad failed ', err));
@@ -350,12 +334,10 @@ export class ArchiveComponent implements OnInit, AfterViewInit {
           buttons: [{
             text: 'Open play store',
             handler: () => {
-              this.market.open('com.google.android.webview').catch(err => {
-                alert('Unable to search for Android System WebView. Go to playstore and update yourself');
-              });
+              window.open('com.google.android.webview', '_self', 'location=no');
             }
           }]
-        })
+        });
       }
     }, 100);
 
@@ -393,78 +375,6 @@ export class ArchiveComponent implements OnInit, AfterViewInit {
   }
 
 
-  private notificationSetup() {
-    this.fcm.getToken();
-    this.fcm.onTockenRefresh().subscribe(
-      async token => {
-        console.log('token changed : ', token);
-        const appVer = await this.appVersion.getVersionNumber();
-        const dataToSend = {
-          'deviceId': this.device.uuid,
-          'deviceName': this.device.model,
-          'appVer': appVer,
-          'fcmToken': token
-        };
-        this.ajax.post(dataToSend, 'http://development.bdigimedia.com/riccha_dev/khulasa-News/pushNotifications/setFcmToken.php'
-        ).catch(err => {
-
-        });
-      },
-      err => {
-        console.log('notification error : ', err);
-      }
-    );
-    this.fcm.onNotifications().subscribe(
-      notification => {
-        console.log('notification success : ', notification);
-        if (this.platform.is('ios')) {
-          this.presentToast(notification.aps.alert);
-        } else {
-          if (notification && notification.tap) {
-            const postSlug: string = notification.url;
-            if (postSlug) {
-              this.postService.getPost(postSlug).then(post => {
-                if (post) {
-                  this.viewPost(post);
-                }
-              });
-            }
-          } else {
-            this.presentToast(notification);
-          }
-        }
-      },
-      err => {
-        console.log('notification err : ', err);
-      }
-    );
-  }
-
-  private async presentToast(message) {
-    const toast = await this.tost.create({
-      message: message.body,
-      duration: 3000,
-    });
-    toast.present();
-  }
-
-  private async viewPost(post: PostModel) {
-
-    const model = await this.modelCtrl.create({
-      component: SingleNewsComponent,
-      componentProps: {
-        post: post
-      }
-    });
-    /* model.onDidDismiss().finally(() => {
-      this.postClosed.emit();
-    });
-    model.present().then(p => {
-      this.postViewed.emit();
-    }).catch(err => {
-      console.log('error : ', err);
-    }); */
-  }
 
 
 }

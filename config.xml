@@ -39,5 +39,4 @@
     <plugin name="cordova-plugin-firebase" spec="2.0.5" />
     <plugin name="cordova-plugin-device" spec="^2.0.2" />
     <plugin name="cordova-plugin-market" spec="1.2.0" />
-    <engine name="android" spec="7.1.4" />
 </widget>

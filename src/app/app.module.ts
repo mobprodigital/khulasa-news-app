@@ -16,7 +16,6 @@ import { Network } from '@ionic-native/network/ngx';
 import { AppVersion } from '@ionic-native/app-version/ngx';
 
 import { Device } from '@ionic-native/device/ngx';
-import { Market } from '@ionic-native/market/ngx';
 
 
 @NgModule({
@@ -38,7 +37,6 @@ import { Market } from '@ionic-native/market/ngx';
     AdMobFree,
     Network,
     Device,
-    Market,
     RoutedEventEmitterService,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],

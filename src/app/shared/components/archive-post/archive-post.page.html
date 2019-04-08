@@ -13,6 +13,7 @@
         | <span class="post-date">{{post.date | date}}</span>
       </span>
     </div>
+    <div [hidden]="true" #postContent [innerHTML]="post.content"></div>
     <span *ngIf="isVideo" class="share-icon">
       <img (click)="sharePost($event)" class="custom-icon" src="assets/icons/share.png" alt="share" />
     </span>

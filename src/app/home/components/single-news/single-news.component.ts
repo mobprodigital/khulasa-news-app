@@ -4,6 +4,7 @@ import { PostService } from 'src/app/services/post/post.service';
 import { NavParams, ModalController, IonSlides } from '@ionic/angular';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
+import { AppLangService } from 'src/app/services/choose-lang/choose-lang.service';
 
 interface SliderPostType {
   post: PostModel;
@@ -34,6 +35,7 @@ export class SingleNewsComponent implements OnInit {
     private modalCtrl: ModalController,
     private iab: InAppBrowser,
     private share: SocialSharing,
+    private appLangSvc: AppLangService
   ) {
 
   }
@@ -90,12 +92,14 @@ export class SingleNewsComponent implements OnInit {
   public async sharePost() {
 
     const postIndex = await this.slider.getActiveIndex();
+    const activeContent: Array<ElementRef<HTMLElement>> = this.singlePostContentList['_results'];
+    const postContentHTML = activeContent[postIndex];
     const post = this.sliderPosts[postIndex].post;
     const shareOptions = {
-      message: post.content.substr(0, 100),
+      message: postContentHTML ? postContentHTML.nativeElement.innerText.substr(0, 20) : post.content.substr(0, 100),
       chooserTitle: 'Share title',
       subject: post.title,
-      url: post.portalUrl,
+      url: `https://m.khulasa-news.com/${post.slug}/${this.appLangSvc.selectedLang}`,
     };
     this.share.shareWithOptions(shareOptions).catch(err => {
       console.log('err in sharing : ', err);

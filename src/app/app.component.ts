@@ -77,6 +77,7 @@ export class AppComponent {
         this.appVersion.getVersionCode().then(versionCode => {
           this.appVersionNumber = versionCode.toString();
         });
+
       }
     });
   }
@@ -158,5 +159,6 @@ export class AppComponent {
     this.routeEvtEmitter.sendMessage(page);
 
   }
+
 
 }

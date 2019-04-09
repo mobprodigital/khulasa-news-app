@@ -3,7 +3,6 @@ import { PostService } from 'src/app/services/post/post.service';
 import { PostModel } from 'src/app/models/post.model';
 import { ModalController, MenuController, IonSlides, Platform, IonSegment, ToastController, AlertController } from '@ionic/angular';
 import { PostCategoryModel } from 'src/app/models/post-category.model';
-import { SearchComponent } from 'src/app/shared/components/search/search.component';
 import { AdMobFree } from '@ionic-native/admob-free/ngx';
 import { RoutedEventEmitterService } from 'src/app/services/routed-event-emitter/routed-event-emitter.service';
 import { PageType } from 'src/app/interfaces/page.interface';
@@ -358,20 +357,6 @@ export class ArchiveComponent implements OnInit, AfterViewInit {
     if ((target.scrollTop >= (target.scrollHeight - 1000)) && !category.nextPostLoading) {
       this.loadMore(category);
     }
-  }
-
-  public async openSearch() {
-    const searchModal = await this.modelCtrl.create({
-      component: SearchComponent,
-      id: 'search-model'
-    });
-
-    searchModal.onDidDismiss().finally(() => {
-      this.exitAppSetting('reset');
-    });
-    searchModal.present().finally(() => {
-      this.exitAppSetting('preset');
-    });
   }
 
 

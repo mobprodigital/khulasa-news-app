@@ -77,7 +77,7 @@ export class AppComponent {
         this.appVersion.getVersionCode().then(versionCode => {
           this.appVersionNumber = versionCode.toString();
         });
-
+        this.registerAppmetrica();
       }
     });
   }
@@ -160,5 +160,26 @@ export class AppComponent {
 
   }
 
+
+  private registerAppmetrica() {
+    document.addEventListener('deviceready', () => {
+      var configuration = {
+        // Mandatory
+        apiKey: 'a8a6ee78-cf5f-4f07-9b21-0d92437237bd',
+        // Optional
+        trackLocationEnabled: true,
+        handleFirstActivationAsUpdateEnabled: true,
+        sessionTimeout: 15
+      };
+
+      try {
+
+        (<any>window).appMetrica.activate(configuration);
+        (<any>window).appMetrica.reportEvent('Test event', { 'foo': 'bar' });
+      } catch (err) {
+        console.log('App metrica err : ', err);
+      }
+    }, false);
+  }
 
 }

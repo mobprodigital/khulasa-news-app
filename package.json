@@ -50,6 +50,7 @@
     "core-js": "^2.5.4",
     "es6-promise-plugin": "^4.2.2",
     "rxjs": "~6.3.3",
+    "yandex-appmetrica-plugin-cordova": "^0.4.0",
     "zone.js": "~0.8.29"
   },
   "devDependencies": {
@@ -95,7 +96,8 @@
       "cordova-plugin-app-version": {},
       "cordova-plugin-device": {},
       "cordova-plugin-ionic-webview": {},
-      "cordova-plugin-splashscreen": {}
+      "cordova-plugin-splashscreen": {},
+      "yandex-appmetrica-plugin-cordova": {}
     },
     "platforms": [
       "android"

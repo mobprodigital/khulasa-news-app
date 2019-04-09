@@ -147,6 +147,8 @@ export class AppComponent {
         },
       ]);
 
+    }).catch(err => {
+      alert(err);
     });
   }
 

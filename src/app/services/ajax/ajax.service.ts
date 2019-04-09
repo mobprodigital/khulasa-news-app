@@ -14,8 +14,8 @@ export class AjaxService {
     hindi: string;
     english: string
   } = {
-      english: 'http://khulasa-news.com/wp-admin/admin-ajax.php',
-      hindi: 'http://hindi.khulasa-news.com/wp-admin/admin-ajax.php'
+      english: 'https://khulasa-news.com/wp-admin/admin-ajax.php',
+      hindi: 'https://hindi.khulasa-news.com/wp-admin/admin-ajax.php'
     };
 
   private activeBaseUrl: string = this.baseUrl.english;

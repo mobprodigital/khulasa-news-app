@@ -74,7 +74,7 @@ export class AppComponent {
       this.getMenuCategories();
       if (this.platform.is('cordova')) {
         this.networkErrHandle();
-        this.appVersion.getVersionCode().then(versionCode => {
+        this.appVersion.getVersionNumber().then(versionCode => {
           this.appVersionNumber = versionCode.toString();
         });
         this.registerAppmetrica();
@@ -148,7 +148,9 @@ export class AppComponent {
       ]);
 
     }).catch(err => {
-      alert(err);
+      if (confirm('Something went wrong. Try reload app')) {
+        window.location.reload();
+      }
     });
   }
 

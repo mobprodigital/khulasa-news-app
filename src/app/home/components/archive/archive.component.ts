@@ -193,7 +193,9 @@ export class ArchiveComponent implements OnInit, AfterViewInit {
       this.getPosts(catList[2].categoryId);
 
     } catch (err) {
-      alert(err);
+      if (confirm('Something went wrong. Try reload app')) {
+        window.location.reload();
+      }
     }
   }
 

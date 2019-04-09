@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
 
-import { IonicModule, IonicRouteStrategy, ToastController } from '@ionic/angular';
+import { IonicModule, IonicRouteStrategy, ToastController, Platform } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 
@@ -16,6 +16,8 @@ import { Network } from '@ionic-native/network/ngx';
 import { AppVersion } from '@ionic-native/app-version/ngx';
 
 import { Device } from '@ionic-native/device/ngx';
+import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
+import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 
 
 @NgModule({
@@ -27,7 +29,7 @@ import { Device } from '@ionic-native/device/ngx';
     SharedModule,
     IonicModule.forRoot(),
     AppRoutingModule,
-    
+
   ],
   providers: [
     StatusBar,
@@ -36,7 +38,12 @@ import { Device } from '@ionic-native/device/ngx';
     ToastController,
     AdMobFree,
     Network,
+    Platform,
     Device,
+    AppVersion,
+    AdMobFree,
+    InAppBrowser,
+    SocialSharing,
     RoutedEventEmitterService,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],

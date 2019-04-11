@@ -21,6 +21,10 @@
             "package_name": "com.mojodigi.khulasanews",
             "certificate_hash": "b3a6fb26021ca0754e02da747f5820c21e4b88f9"
           }
+        },
+        {
+          "client_id": "382652766340-9mhml68fnff0gb4nckjku1lf0recmh2g.apps.googleusercontent.com",
+          "client_type": 3
         }
       ],
       "api_key": [

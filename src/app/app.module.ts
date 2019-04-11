@@ -18,7 +18,7 @@ import { AppVersion } from '@ionic-native/app-version/ngx';
 import { Device } from '@ionic-native/device/ngx';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
-
+import { Deeplinks } from '@ionic-native/deeplinks/ngx';
 
 @NgModule({
   declarations: [AppComponent],
@@ -37,6 +37,7 @@ import { SocialSharing } from '@ionic-native/social-sharing/ngx';
     AppVersion,
     ToastController,
     AdMobFree,
+    Deeplinks,
     Network,
     Platform,
     Device,

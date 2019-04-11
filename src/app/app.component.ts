@@ -9,7 +9,7 @@ import { AppLangService } from './services/choose-lang/choose-lang.service';
 import { RoutedEventEmitterService } from './services/routed-event-emitter/routed-event-emitter.service';
 import { PageType } from './interfaces/page.interface';
 import { AppVersion } from '@ionic-native/app-version/ngx';
-
+import { Deeplinks } from '@ionic-native/deeplinks/ngx';
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html'
@@ -63,6 +63,7 @@ export class AppComponent {
     private network: Network,
     private tost: ToastController,
     private appVersion: AppVersion,
+    private deeplinks: Deeplinks
   ) {
     this.initializeApp();
   }

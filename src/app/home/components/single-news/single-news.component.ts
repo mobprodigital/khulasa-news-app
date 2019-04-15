@@ -9,7 +9,6 @@ import { AppLangService } from 'src/app/services/choose-lang/choose-lang.service
 interface SliderPostType {
   post: PostModel;
   relatedPosts: PostModel[];
-  // isVideo?: boolean;
 }
 
 @Component({
@@ -79,7 +78,7 @@ export class SingleNewsComponent implements OnInit {
           this.openLinksInApp(2);
         }, 500);
       } catch (err) {
-        console.error(err);
+        console.log('error : ', err);
       }
     }
   }
@@ -109,7 +108,7 @@ export class SingleNewsComponent implements OnInit {
 
   public async onSlideNext() {
     const activeIndex = await this.slider.getActiveIndex();
-    this.stopVideo(activeIndex - 1);
+
     if (activeIndex !== null && activeIndex !== undefined && (activeIndex >= this.sliderPosts.length - 3)) {
       const lastPost = this.sliderPosts[this.sliderPosts.length - 1];
       if (lastPost) {
@@ -135,31 +134,9 @@ export class SingleNewsComponent implements OnInit {
 
   public async onSlidePrev() {
     const activeIndex = await this.slider.getActiveIndex();
-    this.stopVideo(activeIndex + 1);
+
   }
 
-  /**
-   * Stop currently playing youtube video
-   * @param targetIndex terget slider index
-   */
-  private async stopVideo(targetIndex: number): Promise<void> {
-    if (this.sliderPosts[targetIndex].post.isVideoPost) {
-      const slides = this.slider['el'];
-      if (slides) {
-        const swipeWrapper = slides.querySelector('.swiper-wrapper');
-        if (swipeWrapper) {
-          const targetSlide = swipeWrapper.children[targetIndex];
-          if (targetSlide) {
-            const iframe = targetSlide.querySelector('iframe');
-            if (iframe) {
-              const iframeSrc = iframe.src;
-              iframe.src = iframeSrc;
-            }
-          }
-        }
-      }
-    }
-  }
 
   public async getNextPost(postId: number): Promise<SliderPostType> {
     try {
@@ -186,7 +163,7 @@ export class SingleNewsComponent implements OnInit {
 
   public async viewPost(p: PostModel) {
     if (p) {
-      this.slider.getActiveIndex().then(activeIndex => this.stopVideo(activeIndex));
+
       const model = await this.modalCtrl.create({
         component: SingleNewsComponent,
         componentProps: {
@@ -233,5 +210,7 @@ export class SingleNewsComponent implements OnInit {
       console.log(err);
     }
   }
+
+  
 
 }

@@ -15,46 +15,42 @@
 </ion-header>
 <ion-content padding>
   <div *ngIf="sliderPosts && sliderPosts.length > 0">
-    <ion-slides (ionSlideDidChange)="openLinksInApp()" #postSlider (ionSlidePrevEnd)="onSlidePrev()" (ionSlideNextEnd)="onSlideNext()" [options]="sliderOptions">
+
+    <ion-slides (ionSlideDidChange)="openLinksInApp()" #postSlider (ionSlidePrevEnd)="onSlidePrev()"
+      (ionSlideNextEnd)="onSlideNext()" [options]="sliderOptions">
       <ion-slide *ngFor="let postSlide of sliderPosts;let slideIndex = index" data-index="slideIndex">
-        <section *ngIf="postSlide" class="post-slide-wrap">
-          <div class="mb-100" *ngIf="postSlide?.post?.isVideoPost; else notVideo">
-            <iframe style="width: 100%"  [src]="postSlide.post.videoUrl" frameborder="0" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
-              allowfullscreen></iframe>
-              <br>
-              <br>
-              <br>
-          </div>
-          <ng-template #notVideo>
-            <div class="single-post mb-100" *ngIf="postSlide.post">
-              <header class="post-thumbnail">
+        <section *ngIf="postSlide.post" class="post-slide-wrap">
+          <!-- <div class="mb-100" *ngIf="postSlide?.post?.isVideoPost; else notVideo">
+            
+          </div> -->
+          <!-- <ng-template> -->
+          <div class="single-post mb-100" *ngIf="postSlide.post">
+            <header class="post-thumbnail">
+              <ng-container *ngIf="postSlide.post.isVideoPost; else notVideo">
+                <a target="_blank"[href]="postSlide.post.videoUrl">
+                  <img [src]="postSlide.post.thumbnail" class="no-transform" alt="post thumbnail">
+                </a>
+              </ng-container>
+              <ng-template #notVideo>
                 <img [src]="postSlide.post.thumbnail" class="no-transform" alt="post thumbnail">
-              </header>
-              <h1 class="post-title">{{postSlide.post.title}}</h1>
-              <div class="post-meta">
-                <ion-grid no-padding>
-                  <ion-row no-padding>
-                    <ion-col size="9" no-padding align-self-center>
-                      <span class="post-author">
-                        {{postSlide.post.author}}
-                      </span>
-                      <span class="post-date">{{postSlide.post.date | date}}</span>
-                    </ion-col>
-                    <ion-col size="3" no-padding align-self-center class="text-right icons-action">
-                      <!-- <span class="comm-icon">
-                        <img class="custom-icon no-transform" src="assets/icons/comment.png" alt="comment" />
-                      </span>
-                      <span class="share-icon">
-                        <img (click)="sharePost($event, postSlide.post)" class="no-transform custom-icon" src="assets/icons/share.png"
-                          alt="share" />
-                      </span> -->
-                    </ion-col>
-                  </ion-row>
-                </ion-grid>
-              </div>
-              <div class="post-content" #singlePostContent [innerHtml]="postSlide.post.content"></div>
+              </ng-template>
+            </header>
+            <h1 class="post-title">{{postSlide.post.title}}</h1>
+            <div class="post-meta">
+              <ion-grid no-padding>
+                <ion-row no-padding>
+                  <ion-col size="9" no-padding align-self-center>
+                    <span class="post-author">
+                      {{postSlide.post.author}}
+                    </span>
+                    <span class="post-date">{{postSlide.post.date | date}}</span>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
             </div>
-          </ng-template>
+            <div class="post-content" #singlePostContent [innerHtml]="postSlide.post.content"></div>
+          </div>
+          <!-- </ng-template> -->
 
           <section class="com-wrap" *ngIf="postSlide.post.comments && postSlide.post.comments.length > 0">
             <header class="comm-head">Comments</header>
@@ -62,7 +58,7 @@
 
               <div class="comm-meta">
                 <ion-grid no-padding>
-                  <ion-row >
+                  <ion-row>
                     <ion-col no-padding size="2">
                       <div class="comm-author-img">
                         <img src="/assets/icon/user-circle-solid.svg" alt="author" />
@@ -80,7 +76,7 @@
           </section>
 
           <section *ngIf="postSlide.relatedPosts && postSlide.relatedPosts.length > 0" class="related-posts-wrapper">
-
+            <h3 class="realted-posts-title">Related Posts</h3>
             <aside class="related-post ion-activatable p-relative" *ngFor="let rp of postSlide.relatedPosts">
               <ion-ripple-effect></ion-ripple-effect>
               <div (click)="viewPost(rp)" class="r-p-thumbnail" [style.background-image]="'url(' + rp.thumbnail + ')'">

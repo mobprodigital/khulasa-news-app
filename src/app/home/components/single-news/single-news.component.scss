@@ -1,45 +1,47 @@
-$comm_color : #a0a0a0;
-
-
+$comm_color: #a0a0a0;
 
 section.post-slide-wrap {
-    height: 100%;
-    max-height: 85vh;
-    overflow: auto;
+  height: 100%;
+  max-height: 85vh;
+  overflow: auto;
 }
 
 header.comm-head {
-    text-align: left;
-    font-size: 30px;
-    color: $comm_color;
+  text-align: left;
+  font-size: 30px;
+  color: $comm_color;
 }
 
 section.com-wrap {
-    padding: 0 20px;
-    border-top: solid 2px $comm_color;
-    margin-bottom: 20px;
+  padding: 0 20px;
+  border-top: solid 2px $comm_color;
+  margin-bottom: 20px;
 }
 
 .comment-box {
-    text-align: left;
-    border-bottom: solid 2px $comm_color;
-    padding: 10px 0;
+  text-align: left;
+  border-bottom: solid 2px $comm_color;
+  padding: 10px 0;
 
-    .comm-author-img img {
-        max-width: 40px;
-        height: auto;
-    }
+  .comm-author-img img {
+    max-width: 40px;
+    height: auto;
+  }
 
-    .comm-author {
-        font-size: 1rem;
-    }
+  .comm-author {
+    font-size: 1rem;
+  }
 
-    .comm-date {
-        font-size: 0.6rem;
-        color: $comm_color;
-    }
+  .comm-date {
+    font-size: 0.6rem;
+    color: $comm_color;
+  }
 
-    .comm-content {
-        font-size: 1rem;
-    }
+  .comm-content {
+    font-size: 1rem;
+  }
+}
+
+.realted-posts-title {
+    
 }

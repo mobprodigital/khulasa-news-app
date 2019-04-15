@@ -34,9 +34,7 @@ import { Deeplinks } from '@ionic-native/deeplinks/ngx';
   providers: [
     StatusBar,
     SplashScreen,
-    AppVersion,
     ToastController,
-    AdMobFree,
     Deeplinks,
     Network,
     Platform,

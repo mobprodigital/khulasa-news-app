@@ -69,7 +69,7 @@ export class ArchiveComponent implements OnInit, AfterViewInit {
   ) {
 
     this.platform.ready().then(async () => {
-      this.showAd();
+      // this.showAd();
       const lang: string = localStorage.getItem('lang_choosen');
       if (lang !== 'true') {
         localStorage.setItem('lang_choosen', 'true');
@@ -165,6 +165,53 @@ export class ArchiveComponent implements OnInit, AfterViewInit {
 
   private async showAd() {
     if (this.platform.is('cordova')) {
+
+      this.adMob.on(this.adMob.events.BANNER_CLOSE).subscribe(
+        success => {
+          console.log('ev BANNER_CLOSE success ', success);
+        },
+        err => {
+          console.log('ev BANNER_CLOSE err ', err);
+        }
+      );
+
+      this.adMob.on(this.adMob.events.BANNER_EXIT_APP).subscribe(
+        success => {
+          console.log('ev BANNER_EXIT_APP success ', success);
+        },
+        err => {
+          console.log('ev BANNER_EXIT_APP err ', err);
+        }
+      );
+
+      this.adMob.on(this.adMob.events.BANNER_LOAD).subscribe(
+        success => {
+          console.log('ev BANNER_LOAD success ', success);
+        },
+        err => {
+          console.log('ev BANNER_LOAD err ', err);
+        }
+      );
+
+      this.adMob.on(this.adMob.events.BANNER_LOAD_FAIL).subscribe(
+        success => {
+          console.log('ev BANNER_LOAD_FAIL success ', success);
+        },
+        err => {
+          console.log('ev BANNER_LOAD_FAIL err ', err);
+        }
+      );
+
+      this.adMob.on(this.adMob.events.BANNER_OPEN).subscribe(
+        success => {
+          console.log('ev BANNER_OPEN success ', success);
+        },
+        err => {
+          console.log('ev BANNER_OPEN err ', err);
+        }
+      );
+
+
       this.adMob.banner.config({
         id: 'ca-app-pub-7769757158085259/7251294473',
         autoShow: true,
@@ -172,7 +219,9 @@ export class ArchiveComponent implements OnInit, AfterViewInit {
       });
       this.adMob.banner.prepare()
         .then(() => {
-          this.adMob.banner.show();
+          this.adMob.banner.show().catch(err => {
+            console.log('err in show ad : ', err);
+          });
         })
         .catch(err => console.error('archive page ad failed ', err));
     }

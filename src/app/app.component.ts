@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Platform, MenuController, ToastController, ModalController } from '@ionic/angular';
+import { Platform, MenuController, ToastController } from '@ionic/angular';
 import { Network } from '@ionic-native/network/ngx';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
@@ -9,7 +9,6 @@ import { AppLangService } from './services/choose-lang/choose-lang.service';
 import { RoutedEventEmitterService } from './services/routed-event-emitter/routed-event-emitter.service';
 import { PageType } from './interfaces/page.interface';
 import { AppVersion } from '@ionic-native/app-version/ngx';
-import { Deeplinks } from '@ionic-native/deeplinks/ngx';
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html'
@@ -63,7 +62,7 @@ export class AppComponent {
     private network: Network,
     private tost: ToastController,
     private appVersion: AppVersion,
-    private deeplinks: Deeplinks
+
   ) {
     this.initializeApp();
   }
@@ -72,9 +71,18 @@ export class AppComponent {
     this.platform.ready().then(async () => {
       this.statusBar.show();
       this.splashScreen.hide();
+
+      this.langService.OnLangChanged.subscribe(
+        success => {
+          console.log(success);
+          this.getMenuCategories();
+        }
+      );
+
       this.getMenuCategories();
       if (this.platform.is('cordova')) {
         this.networkErrHandle();
+
         this.appVersion.getVersionNumber().then(versionCode => {
           this.appVersionNumber = versionCode.toString();
         });
@@ -106,17 +114,25 @@ export class AppComponent {
     });
   }
 
+
   private async getMenuCategories() {
 
-    const activeLang: AppLanguageEnum = this.langService.selectedLang;
+    const activeLang: AppLanguageEnum | null = this.langService.selectedLang;
+
+    if (activeLang !== null) {
+
+    }
 
     this.postService.getMenuCategories().then(cats => {
+      this.appPages.length = 0;
+
       this.appPages.push(...cats.map((c, i) => ({
         title: c.categoryName,
         url: 'home',
         id: c.categoryId,
         icon: activeLang === AppLanguageEnum.English ? this.iconsArr.eng[i] : this.iconsArr.hin[i]
       })));
+
       this.appPages.push(...[
         {
           title: 'Choose language',
@@ -186,5 +202,8 @@ export class AppComponent {
       }
     }, false);
   }
+
+
+
 
 }

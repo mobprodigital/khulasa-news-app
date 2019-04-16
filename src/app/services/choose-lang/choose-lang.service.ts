@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Output, EventEmitter } from '@angular/core';
 import { AppLanguageEnum } from 'src/app/interfaces/app-lang.enum';
 
 @Injectable({
@@ -6,29 +6,30 @@ import { AppLanguageEnum } from 'src/app/interfaces/app-lang.enum';
 })
 export class AppLangService {
 
+  @Output()
+  public OnLangChanged: EventEmitter<AppLanguageEnum> = new EventEmitter();
 
 
   constructor() {
-    this.setDefaultLang();
   }
 
-  private _selectedLang: AppLanguageEnum;
-
-  public get selectedLang(): AppLanguageEnum {
-    return this._selectedLang;
+  public get selectedLang(): AppLanguageEnum | null {
+    const _lang = localStorage.getItem('lang');
+    if (_lang === AppLanguageEnum.English) {
+      return AppLanguageEnum.English;
+    } else if (_lang === AppLanguageEnum.Hindi) {
+      return AppLanguageEnum.Hindi;
+    } else {
+      return null;
+    }
   }
   public set selectedLang(v: AppLanguageEnum) {
-    localStorage.setItem('lang', v);
-    this._selectedLang = v;
+    const _lang = localStorage.getItem('lang');
+    if (_lang !== v) {
+      localStorage.setItem('lang', v);
+      this.OnLangChanged.emit(v);
+    }
   }
-
-  private setDefaultLang() {
-    const savedLang = (localStorage.getItem('lang') === AppLanguageEnum.Hindi) ? AppLanguageEnum.Hindi : AppLanguageEnum.English;
-    localStorage.setItem('lang', savedLang);
-    this._selectedLang = savedLang;
-  }
-
-
 
 
 }

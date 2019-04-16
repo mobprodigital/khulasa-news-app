@@ -10,6 +10,9 @@ import { ChooseLangComponent } from 'src/app/shared/components/choose-lang/choos
 import { AppLanguageEnum } from 'src/app/interfaces/app-lang.enum';
 import { AppLangService } from 'src/app/services/choose-lang/choose-lang.service';
 import { SingalPageComponent } from 'src/app/shared/components/singal-page/singal-page.component';
+import { IDeepLinkObject } from 'src/app/interfaces/deeplink-object.interface';
+import { Deeplinks } from '@ionic-native/deeplinks/ngx';
+import { SingleNewsComponent } from '../single-news/single-news.component';
 
 type CatWisePost = {
   /**
@@ -65,19 +68,38 @@ export class ArchiveComponent implements OnInit, AfterViewInit {
     private toastCtrl: ToastController,
     private langService: AppLangService,
     private alertCtrl: AlertController,
-    private tost: ToastController,
+    private deeplinks: Deeplinks,
+    private modalCtrl: ModalController
   ) {
 
     this.platform.ready().then(async () => {
+
+
       // this.showAd();
-      const lang: string = localStorage.getItem('lang_choosen');
-      if (lang !== 'true') {
-        localStorage.setItem('lang_choosen', 'true');
+
+      this.langService.OnLangChanged.subscribe(
+        success => {
+          this.getMenu();
+        }
+      );
+
+      if (this.langService.selectedLang === null) {
+        this.chooseLang();
+      } else {
+        this.getMenu();
+      }
+
+
+
+
+
+      if (this.platform.is('cordova')) {
+        this.manageDeepLnks();
       }
 
     });
 
-    this.getMenu();
+
     this.routedEvtEmitter.eventEmitter.subscribe(
       params => {
         const pageData: PageType = params.data;
@@ -99,11 +121,12 @@ export class ArchiveComponent implements OnInit, AfterViewInit {
 
   }
 
-  private async chooseLang(): Promise<void> {
+  private async chooseLang(): Promise<AppLanguageEnum> {
 
     const langModal = await this.modelCtrl.create({
       component: ChooseLangComponent,
-      cssClass: 'lang-modal'
+      cssClass: 'lang-modal',
+      backdropDismiss: false
     });
 
     langModal.present().catch(err => console.log('err : ', err)).finally(() => {
@@ -114,12 +137,18 @@ export class ArchiveComponent implements OnInit, AfterViewInit {
     });
 
     const choosedLang: AppLanguageEnum = data['data'];
-    if (choosedLang && choosedLang !== this.langService.selectedLang) {
-      this.langService.selectedLang = choosedLang;
-      window.document.location.reload();
-    }
 
-    return Promise.resolve();
+    return Promise.resolve(choosedLang);
+
+
+    /* if (choosedLang && choosedLang !== this.langService.selectedLang) {
+      // this.langService.selectedLang = choosedLang;
+      // window.document.location.reload();
+      return Promise.resolve(choosedLang);
+    } else {
+      return Promise.reject('Error in choose language');
+    } */
+
 
   }
 
@@ -229,7 +258,10 @@ export class ArchiveComponent implements OnInit, AfterViewInit {
 
   private async getMenu() {
     try {
+      this.catPostList.length = 0;
+
       const catList: PostCategoryModel[] = await this.postService.getMenuCategories();
+
       this.catPostList = <CatWisePost[]>catList.map(cat => (<CatWisePost>{
         category: cat,
         posts: [],
@@ -250,6 +282,7 @@ export class ArchiveComponent implements OnInit, AfterViewInit {
 
   private async setActiveTab(catId: number): Promise<void> {
     if (catId) {
+
       for (let i = 0; i < this.catPostList.length; i++) {
         if (this.catPostList[i].category.categoryId === catId) {
           this.activeTabIndex = i;
@@ -411,6 +444,41 @@ export class ArchiveComponent implements OnInit, AfterViewInit {
   }
 
 
+  private manageDeepLnks() {
+    this.deeplinks.route({}).subscribe(
+      success => {
+        console.log('deep link success : ', success);
+      },
+      (err: IDeepLinkObject) => {
+        console.log('deep link err : ', err);
+        if (err.$link && err.$link.path) {
+          const pathArr = err.$link.path.split('/');
+          console.log('pathArr : ', pathArr);
+          if (pathArr && pathArr.length > 0) {
+            const postSlug: string = pathArr[1];
+            const langRecived = AppLanguageEnum.English === pathArr[2] ? AppLanguageEnum.English : AppLanguageEnum.Hindi;
 
+            this.langService.selectedLang = langRecived;
+
+            this.postService.getPost(postSlug).then(async postShared => {
+              if (postShared) {
+                const modal = await this.modalCtrl.create({
+                  component: SingleNewsComponent,
+                  componentProps: {
+                    post: postShared
+                  }
+                });
+
+                modal.present();
+              }
+            }).catch(err => console.log('post shared err : ', err));
+          }
+        }
+      },
+      () => {
+        console.log('deeplink complete');
+      }
+    );
+  }
 
 }

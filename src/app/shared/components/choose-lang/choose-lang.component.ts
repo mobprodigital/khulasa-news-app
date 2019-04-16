@@ -18,6 +18,7 @@ export class ChooseLangComponent implements OnInit {
 
   public chooseLang(lang: string) {
     const _lang: AppLanguageEnum = lang === AppLanguageEnum.Hindi ? AppLanguageEnum.Hindi : AppLanguageEnum.English;
+    this.appLangService.selectedLang = _lang;
     this.modalCtrl.dismiss(_lang);
   }
 

@@ -25,6 +25,17 @@ export class AjaxService {
     private appLangService: AppLangService,
     private network: Network,
   ) {
+
+
+    this.setActivebaseUrl();
+    this.appLangService.OnLangChanged.subscribe(
+      () => {
+        this.setActivebaseUrl();
+      }
+    );
+  }
+
+  private setActivebaseUrl() {
     if (this.appLangService.selectedLang === AppLanguageEnum.English) {
       this.activeBaseUrl = this.baseUrl.english;
     } else {

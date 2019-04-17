@@ -13,7 +13,7 @@ export class AppLangService {
   constructor() {
   }
 
-  public get selectedLang(): AppLanguageEnum | null {
+  public get selectedLang(): AppLanguageEnum {
     const _lang = localStorage.getItem('lang');
     if (_lang === AppLanguageEnum.English) {
       return AppLanguageEnum.English;

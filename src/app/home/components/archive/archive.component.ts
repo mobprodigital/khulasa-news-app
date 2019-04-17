@@ -79,7 +79,9 @@ export class ArchiveComponent implements OnInit, AfterViewInit {
 
       this.langService.OnLangChanged.subscribe(
         success => {
-          this.getMenu();
+          this.getMenu().then(() => {
+            this.setActiveTab();
+          });
         }
       );
 
@@ -98,6 +100,7 @@ export class ArchiveComponent implements OnInit, AfterViewInit {
       }
 
     });
+
 
 
     this.routedEvtEmitter.eventEmitter.subscribe(
@@ -170,6 +173,7 @@ export class ArchiveComponent implements OnInit, AfterViewInit {
   private async exitOnbackBtn() {
 
     this.platform.backButton.subscribeWithPriority(1, async () => {
+
       if (this.canAppExit) {
         if (this.backBtnCounter === 0) {
           const toast = await this.toastCtrl.create({
@@ -269,9 +273,15 @@ export class ArchiveComponent implements OnInit, AfterViewInit {
         nextPostLoading: false
       }));
 
-      this.getPosts(catList[0].categoryId);
-      this.getPosts(catList[1].categoryId);
-      this.getPosts(catList[2].categoryId);
+      await Promise.all(
+        [
+          this.getPosts(catList[0].categoryId),
+          this.getPosts(catList[1].categoryId),
+          this.getPosts(catList[2].categoryId)
+        ]
+      ).catch(() => undefined);
+
+      return Promise.resolve();
 
     } catch (err) {
       if (confirm('Something went wrong. Try reload app')) {
@@ -280,7 +290,7 @@ export class ArchiveComponent implements OnInit, AfterViewInit {
     }
   }
 
-  private async setActiveTab(catId: number): Promise<void> {
+  private async setActiveTab(catId?: number): Promise<void> {
     if (catId) {
 
       for (let i = 0; i < this.catPostList.length; i++) {
@@ -290,6 +300,9 @@ export class ArchiveComponent implements OnInit, AfterViewInit {
           break;
         }
       }
+    } else {
+      this.activeTabIndex = 0;
+      this.slideTo(0);
     }
   }
 
@@ -320,10 +333,18 @@ export class ArchiveComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
+    console.log('ngOnInit');
 
   }
 
   ngAfterViewInit() {
+    console.log('ngAfterViewInit');
+    this.platform.resume.subscribe(
+      () => {
+        this.manageDeepLnks();
+
+      }
+    );
   }
 
 
@@ -445,7 +466,8 @@ export class ArchiveComponent implements OnInit, AfterViewInit {
 
 
   private manageDeepLnks() {
-    this.deeplinks.route({}).subscribe(
+    this.deeplinks.route({
+    }).subscribe(
       success => {
         console.log('deep link success : ', success);
       },
@@ -456,9 +478,17 @@ export class ArchiveComponent implements OnInit, AfterViewInit {
           console.log('pathArr : ', pathArr);
           if (pathArr && pathArr.length > 0) {
             const postSlug: string = pathArr[1];
-            const langRecived = AppLanguageEnum.English === pathArr[2] ? AppLanguageEnum.English : AppLanguageEnum.Hindi;
+            let langRecieved: AppLanguageEnum;
 
-            this.langService.selectedLang = langRecived;
+            if (AppLanguageEnum.English === pathArr[2]) {
+              langRecieved = AppLanguageEnum.English;
+            } else if (AppLanguageEnum.Hindi === pathArr[2]) {
+              langRecieved = AppLanguageEnum.Hindi;
+            } else {
+              return;
+            }
+
+            this.langService.selectedLang = langRecieved;
 
             this.postService.getPost(postSlug).then(async postShared => {
               if (postShared) {

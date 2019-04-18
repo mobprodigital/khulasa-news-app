@@ -6,16 +6,19 @@ import { FormsModule } from '@angular/forms';
 import { ArchivePostPage } from './components/archive-post/archive-post.page';
 import { SingalPageComponent } from './components/singal-page/singal-page.component';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
+import { CheckUpdateComponent } from './components/check-update/check-update.component';
 
 @NgModule({
   entryComponents: [
     ChooseLangComponent,
-    SingalPageComponent
+    SingalPageComponent,
+    CheckUpdateComponent
   ],
   declarations: [
     ChooseLangComponent,
     ArchivePostPage,
-    SingalPageComponent
+    SingalPageComponent,
+    CheckUpdateComponent
   ],
   imports: [
     CommonModule,
@@ -24,7 +27,8 @@ import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
   ],
   exports: [
     ChooseLangComponent,
-    ArchivePostPage
+    ArchivePostPage,
+    CheckUpdateComponent
   ],
   providers: [InAppBrowser]
 })

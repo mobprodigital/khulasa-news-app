@@ -1,0 +1,38 @@
+section.ch-wrap {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  aside.dialog-wrap {
+    background-color: white;
+    width: 90%;
+    display: inline-block;
+    padding: 10px;
+    border-radius: 3px;
+
+    .d-title {
+      background-color: #540879;
+      color: white;
+      padding: 8px 3px;
+      text-align: center;
+    }
+
+    .btn-wrap {
+        display: flex;
+        justify-content: space-around;
+    }
+
+    img.d-icon {
+        width: 50px;
+        margin-right: 15px;
+    }
+    p.iocn-ver {
+        display: flex;
+        flex-wrap: nowrap;
+        justify-content: center;
+        align-items: center;
+    }
+  }
+}

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Platform, MenuController, ToastController } from '@ionic/angular';
+import { Platform, MenuController, ToastController, ModalController } from '@ionic/angular';
 import { Network } from '@ionic-native/network/ngx';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
@@ -9,6 +9,8 @@ import { AppLangService } from './services/choose-lang/choose-lang.service';
 import { RoutedEventEmitterService } from './services/routed-event-emitter/routed-event-emitter.service';
 import { PageType } from './interfaces/page.interface';
 import { AppVersion } from '@ionic-native/app-version/ngx';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { CheckUpdateComponent } from './shared/components/check-update/check-update.component';
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html'
@@ -62,6 +64,8 @@ export class AppComponent {
     private network: Network,
     private tost: ToastController,
     private appVersion: AppVersion,
+    private http: HttpClient,
+    private modalCtrl: ModalController
 
   ) {
     this.initializeApp();
@@ -71,7 +75,7 @@ export class AppComponent {
     this.platform.ready().then(async () => {
       this.statusBar.show();
       this.splashScreen.hide();
-
+      this.checkForUpdate();
       this.langService.OnLangChanged.subscribe(
         success => {
           console.log(success);
@@ -86,7 +90,7 @@ export class AppComponent {
         this.appVersion.getVersionNumber().then(versionCode => {
           this.appVersionNumber = versionCode.toString();
         });
-        this.registerAppmetrica();
+
       }
     });
   }
@@ -182,28 +186,62 @@ export class AppComponent {
   }
 
 
-  private registerAppmetrica() {
-    document.addEventListener('deviceready', () => {
-      var configuration = {
-        // Mandatory
-        apiKey: 'a8a6ee78-cf5f-4f07-9b21-0d92437237bd',
-        // Optional
-        trackLocationEnabled: true,
-        handleFirstActivationAsUpdateEnabled: true,
-        sessionTimeout: 15
-      };
-
-      try {
-
-        (<any>window).appMetrica.activate(configuration);
-        (<any>window).appMetrica.reportEvent('Test event', { 'foo': 'bar' });
-      } catch (err) {
-        console.log('App metrica err : ', err);
-      }
-    }, false);
+  private isToday(someDate: Date): boolean {
+    const today = new Date();
+    return someDate.getDate() === today.getDate() &&
+      someDate.getMonth() === today.getMonth() &&
+      someDate.getFullYear() === today.getFullYear()
   }
 
+  private async checkForUpdate() {
 
+
+    const prevUpdateDate = localStorage.getItem('updateDate');
+    if (prevUpdateDate) {
+      const date: Date = new Date(prevUpdateDate);
+      if (this.isToday(date)) {
+        return;
+      }
+    }
+
+
+    const packageName = await this.appVersion.getPackageName();
+    this.http.get(
+      'https://development.bdigimedia.com/riccha_dev/khulasa-News/getAdDetailsByAppName.php',
+      {
+        params: new HttpParams().set('appName', 'khulasa news').set('packageName', packageName.toString())
+      }
+    ).subscribe(
+      async (resp: {
+        appVersion: string,
+        message: string,
+        status: string
+      }) => {
+        if (resp.status === 'true') {
+          const remoteAppversion = parseFloat(resp.appVersion);
+          const currentAppVersion = await this.appVersion.getVersionNumber();
+          const _currentAppVersion = parseFloat(currentAppVersion);
+          if (remoteAppversion > _currentAppVersion) {
+            const modal = await this.modalCtrl.create({
+              component: CheckUpdateComponent,
+              cssClass: 'update-modal',
+              componentProps: {
+                appVersion: remoteAppversion
+              }
+
+            });
+            modal.present();
+          }
+        }
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        localStorage.setItem('updateDate', new Date().toString());
+      }
+    );
+  }
 
 
 }

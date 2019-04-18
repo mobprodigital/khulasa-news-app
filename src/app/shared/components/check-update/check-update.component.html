@@ -1,0 +1,21 @@
+<section class="ch-wrap">
+  <aside class="dialog-wrap">
+    <div class="d-title">
+      A new version is available
+    </div>
+    <div class="d-body">
+      <p class="iocn-ver">
+        <img class="d-icon" src="assets/logo/logo_icon_sm.png" />   <span>{{remoteVersion}}</span> 
+      </p> 
+
+      
+      <p>
+        A new version of this application available, click UPDATE NOW to update
+      </p>
+    </div>
+    <div class="btn-wrap">
+      <ion-button (click)="update()" fill="clear" color="danger">Update now</ion-button>
+      <ion-button (click)="goback()" fill="clear" color="danger">Later</ion-button>
+    </div>
+  </aside>
+</section>

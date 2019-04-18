@@ -33,6 +33,7 @@
     "@ionic-native/status-bar": "^5.0.0",
     "@ionic/angular": "^4.0.0",
     "cordova-admob-sdk": "^0.24.1",
+    "cordova-android": "8.0.0",
     "cordova-plugin-admob-free": "0.26.0",
     "cordova-plugin-app-version": "0.1.9",
     "cordova-plugin-device": "2.0.2",
@@ -116,6 +117,8 @@
         "ADMOB_APP_ID": "ca-app-pub-7769757158085259~5437150357"
       }
     },
-    "platforms": []
+    "platforms": [
+      "android"
+    ]
   }
 }

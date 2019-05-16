@@ -11,12 +11,12 @@ import { ModalController } from '@ionic/angular';
 })
 export class SingalPageComponent implements OnInit {
 
-  @Input() pageId: number;
+  @Input() pageId: number | string;
   @Input() pageTitle: string;
 
   public post: PostModel;
   public errorMsg: string = '';
-  public loder: boolean = true;
+  public loader: boolean = true;
 
   constructor(private postService: PostService, private modalCtrl: ModalController) {
 
@@ -24,10 +24,18 @@ export class SingalPageComponent implements OnInit {
 
   private getPost() {
     this.errorMsg = '';
-    this.postService.getPost(this.pageId)
-      .then(data => { this.post = data; })
-      .catch(err => { this.errorMsg = err; })
-      .finally(() => this.loder = false);
+    if (typeof this.pageId === 'string') {
+      this.postService.getPost(this.pageId as string)
+        .then(data => { this.post = data; })
+        .catch(err => { this.errorMsg = err; })
+        .finally(() => this.loader = false);
+    } else if (typeof this.pageId === 'number') {
+      this.postService.getPost(this.pageId as number)
+        .then(data => { this.post = data; })
+        .catch(err => { this.errorMsg = err; })
+        .finally(() => this.loader = false);
+    }
+
   }
   public goBack() {
     this.modalCtrl.dismiss();

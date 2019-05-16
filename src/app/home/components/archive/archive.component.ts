@@ -69,8 +69,34 @@ export class ArchiveComponent implements OnInit, AfterViewInit {
     private langService: AppLangService,
     private alertCtrl: AlertController,
     private deeplinks: Deeplinks,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private appLangSvc: AppLangService
   ) {
+
+    window.addEventListener('onNotificationClicked', (evt: any) => {
+      if (evt && evt.detail) {
+
+        const url: string = evt.detail;
+        this.appLangSvc.selectedLang = url.includes('hindi.khulasa-news.com') ? AppLanguageEnum.Hindi : AppLanguageEnum.English;
+
+        const urlArr = url.split('/');
+        let domainSearch = '';
+        if (this.appLangSvc.selectedLang === AppLanguageEnum.English) {
+          domainSearch = 'khulasa-news.com';
+        } else if (this.appLangSvc.selectedLang === AppLanguageEnum.Hindi) {
+          domainSearch = 'hindi.khulasa-news.com';
+        } else {
+          return;
+        }
+
+        const postSlugName: string = urlArr[urlArr.indexOf(domainSearch) + 1];
+
+        this.postService.getPost(postSlugName).then(post => {
+          this.viewPost(post);
+        }).catch(err => console.log('err : ', err));
+
+      }
+    }, false);
 
     this.platform.ready().then(async () => {
 
@@ -103,6 +129,8 @@ export class ArchiveComponent implements OnInit, AfterViewInit {
 
 
 
+
+
     this.routedEvtEmitter.eventEmitter.subscribe(
       params => {
         const pageData: PageType = params.data;
@@ -123,6 +151,21 @@ export class ArchiveComponent implements OnInit, AfterViewInit {
     }
 
   }
+
+
+  public async viewPost(postModel: PostModel) {
+    if (postModel) {
+      const model = await this.modelCtrl.create({
+        component: SingleNewsComponent,
+        componentProps: {
+          post: postModel
+        }
+      });
+
+      model.present();
+    }
+  }
+
 
   private async chooseLang(): Promise<AppLanguageEnum> {
 
@@ -155,7 +198,7 @@ export class ArchiveComponent implements OnInit, AfterViewInit {
 
   }
 
-  private async showPageModal(params: object): Promise<void> {
+  private async showPageModal(params: { pageId: string | number, pageTitle?: string }): Promise<void> {
     const pageModal = await this.modelCtrl.create({
       component: SingalPageComponent,
       componentProps: params
@@ -501,7 +544,7 @@ export class ArchiveComponent implements OnInit, AfterViewInit {
 
                 modal.present();
               }
-            }).catch(err => console.log('post shared err : ', err));
+            }).catch(postErr => console.log('post shared err : ', postErr));
           }
         }
       },
